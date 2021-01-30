@@ -3,12 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using MySql.Data.MySqlClient;
 using Trinity.PoolManagerData;
 
 namespace Trinity.PoolDB
 {
+    public delegate void PoolLoadStatusEventHandler(object sender, PoolLoadStatus e);
+    public class PoolLoadStatus
+    {
+        public string currentStatus;
+        public uint currentItem;
+        public uint maxItems;
+    }
+    
     public class PoolDB
     {
         private readonly MySqlConnection sqlConnection;
@@ -17,6 +26,8 @@ namespace Trinity.PoolDB
         private SortedDictionary<uint, LegacyPoolEntry> legacyPoolData;
         private SortedDictionary<uint, MapPoolItem> mapPoolData;
         private Dictionary<uint, LegacyPoolEntry> unstructLegacyPoolData;
+        private PoolLoadStatus currentStatus;
+        private ReaderWriterLockSlim statusLock;
 
         public PoolDB(string serverName, string userName, string passWord, string database)
         {
@@ -25,6 +36,8 @@ namespace Trinity.PoolDB
             legacyPoolData = null;
             unstructLegacyPoolData = null;
             mapPoolData = null;
+            currentStatus = new PoolLoadStatus();
+            statusLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
             var builder = new MySqlConnectionStringBuilder
             {
@@ -42,6 +55,39 @@ namespace Trinity.PoolDB
             sqlConnection.Dispose();
         }
 
+        public PoolLoadStatus GetStatus()
+        {
+            statusLock.EnterReadLock();
+            var returnStatus = new PoolLoadStatus()
+            {
+                currentStatus = currentStatus.currentStatus,
+                currentItem = currentStatus.currentItem,
+                maxItems = currentStatus.maxItems
+            };
+            statusLock.ExitReadLock();
+            return returnStatus;
+
+        }
+
+        private void UpdateStatus(string statusText = null, uint? currentItem = null, uint? maxItems = null)
+        {
+            // We don't want to bother updating if this is locked by the reader unless updating text or max items
+            if (statusLock.TryEnterWriteLock((statusText == null && maxItems == null) ? 0 : 100))
+            {
+                if (statusText != null)
+                    currentStatus.currentStatus = statusText;
+
+                if (currentItem.HasValue)
+                    currentStatus.currentItem = currentItem.Value;
+
+                if (maxItems.HasValue)
+                    currentStatus.maxItems = maxItems.Value;
+                statusLock.ExitWriteLock();
+            }
+
+            //statusHandler(this, currentStatus);
+        }
+
         public void LoadData()
         {
             // Load all data into internal structures
@@ -49,10 +95,23 @@ namespace Trinity.PoolDB
             loadCreatures();
             loadGameObjects();
             loadLegacyPools();
+            UpdateStatus($"Loading complete", 1, 1);
+        }
+
+        private uint getRowsInTable(string table, MySqlConnection connect)
+        {
+            using var countCmd = new MySqlCommand($"SELECT COUNT(*) FROM `{table}`", connect);
+            using var countRecords = countCmd.ExecuteReader(CommandBehavior.SingleRow);
+            {
+                countRecords.Read();
+                return countRecords.GetUInt32(0);
+            }
         }
 
         protected void loadCreatures()
         {
+            var creatureTemplateRows = getRowsInTable("creature_template", sqlConnection);
+
             // ============================
             // Load creature_template table
             // ============================
@@ -69,10 +128,12 @@ namespace Trinity.PoolDB
 
             creatureData = new SortedDictionary<uint, Creature>();
 
+            UpdateStatus("Loading creature templates", 0 ,creatureTemplateRows);
             using (var templateCmd = new MySqlCommand(templateQuery, sqlConnection))
             {
                 using (var creatureTemplateRecords = templateCmd.ExecuteReader())
                 {
+                    uint rowNum = 0;
                     while (creatureTemplateRecords.Read())
                     {
                         var template = new CreatureTemplate
@@ -124,6 +185,7 @@ namespace Trinity.PoolDB
                             family = creatureTemplateRecords.GetInt32(32)
                         };
                         templates.Add(template.entry, template);
+                        UpdateStatus(null, rowNum++, null);
                     }
                 }
             }
@@ -131,15 +193,20 @@ namespace Trinity.PoolDB
             // ===================
             // Load creature table
             // ===================
+            var creatureRows = getRowsInTable("creature", sqlConnection);
+
             var creatureQuery =
                 @"SELECT guid, id, map, zoneId, areaId, spawnMask, phaseMask, modelid, equipment_id, position_x, "
                 + "position_y, position_z, orientation, spawntimesecs, wander_distance, currentwaypoint, curhealth, "
                 + "curmana, MovementType, npcflag, unit_flags, dynamicflags, ScriptName, VerifiedBuild "
                 + "FROM creature";
+
+            UpdateStatus("Loading creatures", 0, creatureRows);
             using (var creatureCmd = new MySqlCommand(creatureQuery, sqlConnection))
             {
                 using (var creatureRecords = creatureCmd.ExecuteReader())
                 {
+                    uint rowNum = 0;
                     while (creatureRecords.Read())
                     {
                         var creatureId = creatureRecords.GetUInt32(1);
@@ -177,6 +244,7 @@ namespace Trinity.PoolDB
                             scriptName = !creatureRecords.IsDBNull(22) ? creatureRecords.GetString(22) : null
                         };
                         creatureData.Add(creature.guid, creature);
+                        UpdateStatus(null, rowNum++, null);
                     }
                 }
             }
@@ -187,6 +255,7 @@ namespace Trinity.PoolDB
             // ==============================
             // Load gameobject_template table
             // ==============================
+            var gameObjectTemplateRows = getRowsInTable("gameobject_template", sqlConnection);
             var templates = new Dictionary<uint, GameObjectTemplate>();
             var templateQuery =
                 @"SELECT entry, type, displayId, name, IconName, castBarCaption, unk1, size, Data0, Data1, "
@@ -197,10 +266,12 @@ namespace Trinity.PoolDB
 
             gameObjectData = new SortedDictionary<uint, GameObject>();
 
+            UpdateStatus("Loading gameobject templates", 0, gameObjectTemplateRows);
             using (var templateCmd = new MySqlCommand(templateQuery, sqlConnection))
             {
                 using (var gameObjectTemplateRecords = templateCmd.ExecuteReader())
                 {
+                    uint rowNum = 0;
                     while (gameObjectTemplateRecords.Read())
                     {
                         var template = new GameObjectTemplate
@@ -243,6 +314,7 @@ namespace Trinity.PoolDB
                             scriptName = gameObjectTemplateRecords.GetString(33)
                         };
                         templates.Add(template.entry, template);
+                        UpdateStatus(null, rowNum++, null);
                     }
                 }
             }
@@ -250,15 +322,19 @@ namespace Trinity.PoolDB
             // =====================
             // Load gameobject table
             // =====================
+            var gameObjectRows = getRowsInTable("gameobject", sqlConnection);
             var gameObjectQuery =
                 @"SELECT guid, id, map, zoneId, areaId, spawnMask, phaseMask, position_x, position_y, position_z, "
                 + @"orientation, rotation0, rotation1, rotation2, rotation3, spawntimesecs, animprogress, state, "
                 + @"ScriptName, VerifiedBuild "
                 + "FROM gameobject";
+
+            UpdateStatus("Loading gameobjects", 0, gameObjectRows);
             using (var gameObjectCmd = new MySqlCommand(gameObjectQuery, sqlConnection))
             {
                 using (var gameObjectRecords = gameObjectCmd.ExecuteReader())
                 {
+                    uint rowNum = 0;
                     while (gameObjectRecords.Read())
                     {
                         // Find template
@@ -292,6 +368,7 @@ namespace Trinity.PoolDB
                             scriptName = !gameObjectRecords.IsDBNull(18) ? gameObjectRecords.GetString(18) : null
                         };
                         gameObjectData.Add(gameObject.guid, gameObject);
+                        UpdateStatus(null, rowNum++, null);
                     }
                 }
             }
@@ -299,6 +376,8 @@ namespace Trinity.PoolDB
 
         protected void loadLegacyPools()
         {
+            var poolTemplateRows = getRowsInTable("pool_template", sqlConnection);
+
             // ============================
             // Load Old pool_template table
             // ============================
@@ -307,10 +386,12 @@ namespace Trinity.PoolDB
             legacyPoolData = new SortedDictionary<uint, LegacyPoolEntry>();
             unstructLegacyPoolData = new Dictionary<uint, LegacyPoolEntry>();
 
+            UpdateStatus("Loading legacy pool templates", 0, poolTemplateRows);
             using (var legacyPoolTemplateCmd = new MySqlCommand(legacyPoolTemplateQuery, sqlConnection))
             {
                 using (var legacyPoolTemplateRecords = legacyPoolTemplateCmd.ExecuteReader())
                 {
+                    uint rowNum = 0;
                     while (legacyPoolTemplateRecords.Read())
                     {
                         var legacyPoolTemplate = new LegacyPoolEntry
@@ -322,6 +403,7 @@ namespace Trinity.PoolDB
 
                         legacyPoolData.Add(legacyPoolTemplate.poolId, legacyPoolTemplate);
                         unstructLegacyPoolData.Add(legacyPoolTemplate.poolId, legacyPoolTemplate);
+                        UpdateStatus(null, rowNum++, null);
                     }
                 }
             }
@@ -329,11 +411,16 @@ namespace Trinity.PoolDB
             // ===========================
             // Load old pool_members table
             // ===========================
+            var poolMembersRows = getRowsInTable("pool_members", sqlConnection);
+
             var legacyPoolMembersQuery = @"SELECT type, spawnId, poolSpawnId, chance, description FROM pool_members";
+
+            UpdateStatus("Loading legacy pool members", 0, poolMembersRows);
             using (var legacyPoolMembersCmd = new MySqlCommand(legacyPoolMembersQuery, sqlConnection))
             {
                 using (var legacyPoolMembersRecords = legacyPoolMembersCmd.ExecuteReader())
                 {
+                    uint rowNum = 0;
                     while (legacyPoolMembersRecords.Read())
                     {
                         var type = (LegacyPoolType) legacyPoolMembersRecords.GetUInt32(0);
@@ -398,7 +485,7 @@ namespace Trinity.PoolDB
                                     break;
                             }
                         }
-
+                        UpdateStatus(null, rowNum++, null);
                     }
                 }
             }
@@ -439,16 +526,20 @@ namespace Trinity.PoolDB
             // =====================
             // Load Pool spawnpoints
             // =====================
+            var spawnPointRows = getRowsInTable("mappool_spawnpoints", sqlConnection);
+
             var spawnPointQuery = @"SELECT map, pointId, zoneId, areaId, gridId, positionX, positionY, "
                                   + @"positionZ, orientation, rotation0, rotation1, rotation2, rotation3 "
                                   + @"from mappool_spawnpoints";
 
             mapPoolData = new SortedDictionary<uint, MapPoolItem>();
 
+            UpdateStatus("Loading spawnpoints", 0, spawnPointRows);
             using (var spawnPointCmd = new MySqlCommand(spawnPointQuery, sqlConnection))
             {
                 using (var spawnPointRecords = spawnPointCmd.ExecuteReader())
                 {
+                    uint rowNum = 0;
                     while (spawnPointRecords.Read())
                     {
                         var spawnPoint = new SpawnPoint
@@ -473,6 +564,7 @@ namespace Trinity.PoolDB
                             throw new Exception($"Map: {spawnPoint.map} has duplicate spawnpoint {spawnPoint.pointId}");
 
                         thisMap.spawnPoints.Add(spawnPoint.pointId, spawnPoint);
+                        UpdateStatus(null, rowNum++, null);
                     }
                 }
             }
@@ -480,16 +572,20 @@ namespace Trinity.PoolDB
             // ========================
             // Load pool_template table
             // ========================
+            var mapPoolTemplateRows = getRowsInTable("mappool_template", sqlConnection);
+
             var poolTemplateQuery =
                 @"SELECT map, poolId, poolType, phaseMask, spawnMask, minLimit, maxLimit, MovementType, "
                 + @"spawnDist, spawntimeSecsMin, spawntimeSecsMax, spawntimeSecsFast, corpsetimeSecsLoot, "
                 + @"corpsetimeSecsNoLoot, poolFlags, description "
                 + @"FROM mappool_template";
 
+            UpdateStatus("Loading map based pool templates", 0, mapPoolTemplateRows);
             using (var poolTemplateCmd = new MySqlCommand(poolTemplateQuery, sqlConnection))
             {
                 using (var poolTemplateRecords = poolTemplateCmd.ExecuteReader())
                 {
+                    uint rowNum = 0;
                     while (poolTemplateRecords.Read())
                     {
                         var poolEntry = new PoolEntry
@@ -518,18 +614,23 @@ namespace Trinity.PoolDB
 
                         thisMap.pools.Add(poolEntry.poolId, poolEntry);
                         thisMap.unstructPools.Add(poolEntry.poolId, poolEntry);
+                        UpdateStatus(null, rowNum++, null);
                     }
                 }
             }
 
             // Load pool_hierarchy table
+            var mapPoolHierarchyRows = getRowsInTable("mappool_hierarchy", sqlConnection);
+
             var poolHierarchyQuery = @"SELECT map, poolId, childPoolId FROM mappool_hierarchy";
             var poolsToDelete = new List<PoolEntry>();
 
+            UpdateStatus("Loading map based pool hierarchy", 0, mapPoolHierarchyRows);
             using (var poolHierarchyCmd = new MySqlCommand(poolHierarchyQuery, sqlConnection))
             {
                 using (var poolHierarchyRecords = poolHierarchyCmd.ExecuteReader())
                 {
+                    uint rowNum = 0;
                     while (poolHierarchyRecords.Read())
                     {
                         var mapId = poolHierarchyRecords.GetUInt32(0);
@@ -558,6 +659,7 @@ namespace Trinity.PoolDB
                         {
                             throw new Exception($"Map {mapId} missing");
                         }
+                        UpdateStatus(null, rowNum++, null);
                     }
                 }
             }

@@ -6,8 +6,10 @@
         xmlns:local="clr-namespace:TrinityPoolManager"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Initialized="Grid_Initialized">
-        <Button Content="Button" HorizontalAlignment="Left" Margin="106,59,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+    <Grid Initialized="Grid_Initialized" Unloaded="Grid_Unloaded">
+        <Button x:Name="btnLoad" Content="Load Data" Click="Button_Click" Margin="20,92,613,298"/>
+        <Label x:Name="lblStatus" Content="Status.." HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Width="187"/>
+        <ProgressBar x:Name="prgStatus" HorizontalAlignment="Left" Height="10" Margin="202,44,0,0" VerticalAlignment="Top" Width="486"/>
 
     </Grid>
 </Window>

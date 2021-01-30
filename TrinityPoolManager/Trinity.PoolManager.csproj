@@ -4,11 +4,11 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Trinity.PoolDB\Trinity.PoolDB.csproj" />
-    <ProjectReference Include="..\Trinity.PoolManagerData\Trinity.PoolManagerData.csproj" />
   </ItemGroup>
 
 </Project>
