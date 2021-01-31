@@ -128,7 +128,7 @@ namespace Trinity.PoolDB
             numRows += getRowsInTable("mappool_hierarchy", sqlConnection);
             numRows += getRowsInTable("mappool_creature", sqlConnection);
             numRows += getRowsInTable("mappool_gameobject", sqlConnection);
-            numRows += getRowsInTable("mappool_spawnpoints", sqlConnection);
+            numRows += getRowsInTable("mappool_spawns", sqlConnection);
             
             return numRows;
         }
