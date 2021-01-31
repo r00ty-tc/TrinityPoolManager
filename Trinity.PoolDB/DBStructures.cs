@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Trinity.PoolManagerData
 {
@@ -44,6 +46,16 @@ namespace Trinity.PoolManagerData
         }
     }
 
+    public class TrinityObjectTemplate
+    {
+        public ObjectType objectType;
+        public uint entry;
+        public string name;
+        public string iconName;
+        public List<PoolEntry> memberPools;
+
+    }
+
     public class Creature : TrinityObject
     {
         public uint modelId;
@@ -64,15 +76,12 @@ namespace Trinity.PoolManagerData
         }
     }
 
-    public class CreatureTemplate
+    public class CreatureTemplate : TrinityObjectTemplate
     {
-        public uint entry;
         public uint[] difficultyEntry;
         public uint[] killCredit;
         public uint[] modelid;
-        public string name;
         public string subName;
-        public string iconName;
         public uint gossipMenuId;
         public uint minLevel;
         public uint maxLevel;
@@ -94,7 +103,6 @@ namespace Trinity.PoolManagerData
         public int family;
         public uint trainerType;
         public uint trainerSpell;
-        public List<PoolEntry> memberPools;
 
         public CreatureTemplate()
         {
@@ -103,6 +111,7 @@ namespace Trinity.PoolManagerData
             modelid = new uint[4];
             unitFlags = new uint[2];
             memberPools = new List<PoolEntry>();
+            objectType = ObjectType.OBJECT_CREATURE;
         }
     }
 
@@ -122,25 +131,22 @@ namespace Trinity.PoolManagerData
         }
     }
 
-    public class GameObjectTemplate
+    public class GameObjectTemplate : TrinityObjectTemplate
     {
-        public uint entry;
         public uint type;
         public uint displayId;
-        public string name;
-        public string iconName;
         public string castBarCaption;
         public string unk1;
         public float size;
         public long[] data;
         public string aIName;
         public string scriptName;
-        public List<PoolEntry> memberPools;
 
         public GameObjectTemplate()
         {
             data = new long[24];
             memberPools = new List<PoolEntry>();
+            objectType = ObjectType.OBJECT_GAMEOBJECT;
         }
     }
 
@@ -219,6 +225,7 @@ namespace Trinity.PoolManagerData
             childPools = new List<PoolEntry>();
             creatures = new List<PoolCreature>();
             gameObjects = new List<PoolGameObject>();
+            spawnPoints = new List<SpawnPoint>();
         }
     }
 
@@ -229,6 +236,7 @@ namespace Trinity.PoolManagerData
         public uint poolId;
         public uint entry;
         public float chance;
+        public TrinityObjectTemplate trinityObject;
 
         public PoolCreature AsCreature()
         {
@@ -248,7 +256,6 @@ namespace Trinity.PoolManagerData
     }
     public class PoolCreature : PoolObject
     {
-
         public uint modelId;
         public int equipmentId;
         public uint currentWaypoint;

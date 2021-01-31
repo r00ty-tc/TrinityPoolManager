@@ -5,11 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrinityPoolManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="813">
     <Grid Initialized="Grid_Initialized" Unloaded="Grid_Unloaded">
-        <Button x:Name="btnLoad" Content="Load Data" Click="Button_Click" Margin="20,92,613,298"/>
-        <Label x:Name="lblStatus" Content="Status.." HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Width="187"/>
-        <ProgressBar x:Name="prgStatus" HorizontalAlignment="Left" Height="10" Margin="202,44,0,0" VerticalAlignment="Top" Width="486"/>
+        <GroupBox x:Name="grpStatus" Header="Status" Margin="0,374,0,0" VerticalAlignment="Top" Height="50">
+            <Grid x:Name="grdStatus">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="13*"/>
+                    <RowDefinition Height="30*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="29*"/>
+                    <ColumnDefinition Width="18*"/>
+                    <ColumnDefinition Width="260*"/>
+                    <ColumnDefinition Width="484*"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="lblStatus" Content="Status.." Margin="0,-2,86,0" Grid.ColumnSpan="3" VerticalAlignment="Top" Grid.RowSpan="2" Height="24"/>
+                <ProgressBar x:Name="prgStatus" RenderTransformOrigin="0.5,0.5" FlowDirection="LeftToRight" VerticalContentAlignment="Center" Margin="177,0,10,0" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Top" Height="20" Grid.RowSpan="2">
+                    <ProgressBar.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="1"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </ProgressBar.RenderTransform>
+                </ProgressBar>
+                <GridSplitter HorizontalAlignment="Left" Height="42" Margin="167,8,0,0" VerticalAlignment="Top" Width="0" Visibility="Hidden" Grid.Column="2" Grid.Row="1"/>
+            </Grid>
+        </GroupBox>
+        <TabControl x:Name="tbMaintabs" Margin="0,0,0,65">
+            <TabItem x:Name="tiOverview" Header="Overview">
+                <Grid Background="#FFE5E5E5">
+                    <Grid x:Name="grdOverview" Background="#FFE5E5E5">
+                        <Grid Margin="0,0,16,-5">
+                            <Button x:Name="btnLoad" Content="Load Data" Click="Button_Click" Margin="10,0,0,10" RenderTransformOrigin="-0.323,0.511" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="91"/>
+                            <TreeView x:Name="tvOverview" Margin="10,10,0,44" HorizontalAlignment="Left" Width="235"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Legacy Pools"/>
+        </TabControl>
 
     </Grid>
 </Window>
