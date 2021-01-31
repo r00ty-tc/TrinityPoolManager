@@ -1,0 +1,3 @@
+[submodule "DBCReader"]
+	path = DBCReader
+	url = https://github.com/wowdev/DBCD.git

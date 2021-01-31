@@ -57,15 +57,54 @@ namespace Trinity.PoolManager
 
             updateLocalStatus("Updating Treeview for Creatures", 0, maxUpdated);
 
-            // We don't get to see progress, or add key IDs. But it's 1,000,000 times faster
-            var treeNodes = 
+            // Add unique maps first
+            var mapNodes =
             (
-                from row in data.CreatureData.Values
-                select new 
-                    TreeNode($"{row.guid}/{row.creatureTemplate.entry}: {row.creatureTemplate.name}")
+                from row in data.CreatureData.Values.Select(row => row.dbcMap).Distinct().OrderBy(row => row.Id)
+            select new
+                    TreeNode($"{row.Id}: {row.MapName_Lang}")
             ).ToArray();
+            creatureRoot.Nodes.AddRange(mapNodes);
 
-            creatureRoot.Nodes.AddRange(treeNodes);
+            // Probably a better way to go about this
+            foreach (var mapNode in creatureRoot.Nodes.Cast<TreeNode>())
+            {
+                var mapId = Convert.ToUInt32(mapNode.Text.Split(':')[0]);
+                // Add distinct zones per map
+                var zoneNodes =
+                (
+                    from row in data.CreatureData.Values.Where(row => row.map.Equals(mapId) && row.dbcZone != null).Select(row => row.dbcZone).Distinct().OrderBy(row => row.ID)
+                    select new
+                        TreeNode($"{row.ID}: {row.AreaName_Lang}")
+                ).ToArray();
+                mapNode.Nodes.AddRange(zoneNodes);
+
+                foreach (var zoneNode in zoneNodes)
+                {
+                    // Distinct creature templates
+                    var zoneId = Convert.ToUInt32(zoneNode.Text.Split(':')[0]);
+                    var creatureTemplateNodes =
+                    (
+                        from row in data.CreatureData.Values.Where(row => row.zoneId.Equals(zoneId)).Select(row => row.creatureTemplate).Distinct().OrderBy(row => row.entry)
+                        select new
+                            TreeNode($"{row.entry}: {row.name}")
+                    ).ToArray();
+                    zoneNode.Nodes.AddRange(creatureTemplateNodes);
+
+                    foreach (var templateNode in creatureTemplateNodes)
+                    {
+                        // Add creatures for each template
+                        var entryId = Convert.ToUInt32(templateNode.Text.Split(':')[0]);
+                        var template = data.CreatureTemplateData[entryId];
+                        var creatureNodes = (
+                            from row in template.objects
+                            select new TreeNode($"{row.guid}: {template.minLevel}-{template.maxLevel}")
+                        ).ToArray();
+                        templateNode.Nodes.AddRange(creatureNodes);
+                    }
+                }
+            }
+
             tvOverview.EndUpdate();
             tvOverview.ResumeLayout();
             

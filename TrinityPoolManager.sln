@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trinity.PoolDB", "Trinity.PoolDB\Trinity.PoolDB.csproj", "{61A4B766-7A92-4B2F-BA1D-59143AC3BE4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trinity.PoolManager", "Trinity.PoolManager\Trinity.PoolManager.csproj", "{A21136A7-0C42-4E52-8175-57755B4E6AA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trinity.PoolManager", "Trinity.PoolManager\Trinity.PoolManager.csproj", "{A21136A7-0C42-4E52-8175-57755B4E6AA8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBFileReaderLib", "DBCReader\DBFileReaderLib\DBFileReaderLib.csproj", "{47CF0AD9-CF23-47FD-8061-180E3AC20982}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,14 @@ Global
 		{A21136A7-0C42-4E52-8175-57755B4E6AA8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A21136A7-0C42-4E52-8175-57755B4E6AA8}.Release|x64.ActiveCfg = Release|Any CPU
 		{A21136A7-0C42-4E52-8175-57755B4E6AA8}.Release|x64.Build.0 = Release|Any CPU
+		{47CF0AD9-CF23-47FD-8061-180E3AC20982}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47CF0AD9-CF23-47FD-8061-180E3AC20982}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47CF0AD9-CF23-47FD-8061-180E3AC20982}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{47CF0AD9-CF23-47FD-8061-180E3AC20982}.Debug|x64.Build.0 = Debug|Any CPU
+		{47CF0AD9-CF23-47FD-8061-180E3AC20982}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47CF0AD9-CF23-47FD-8061-180E3AC20982}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47CF0AD9-CF23-47FD-8061-180E3AC20982}.Release|x64.ActiveCfg = Release|Any CPU
+		{47CF0AD9-CF23-47FD-8061-180E3AC20982}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

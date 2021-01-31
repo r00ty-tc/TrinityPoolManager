@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
+using DBFileReaderLib;
 using MySql.Data.MySqlClient;
 using Trinity.PoolManagerData;
+using Trinity.PoolDB;
 
 namespace Trinity.PoolDB
 {
+    using Trinity.PoolDB;
     public delegate void PoolLoadStatusEventHandler(object sender, PoolLoadStatus e);
     public class PoolLoadStatus
     {
@@ -20,6 +26,7 @@ namespace Trinity.PoolDB
     
     public class PoolDB
     {
+        private const string dbcFolder = @"E:\Development\trinity\3.3.5\servers\3.3.5\DBCMaster\dbc\";      // This will be config, like DB login
         private readonly MySqlConnection sqlConnection;
         private SortedDictionary<uint, Creature> creatureData;
         private SortedDictionary<uint, GameObject> gameObjectData;
@@ -30,6 +37,9 @@ namespace Trinity.PoolDB
         private Dictionary<uint, LegacyPoolEntry> unstructLegacyPoolData;
         private PoolLoadStatus currentStatus;
         private ReaderWriterLockSlim statusLock;
+        private Storage<MapEntry> dbcMap;
+        private Storage<AreaTableEntry> dbcArea;
+        private Dictionary<int, AreaTableEntry> dbcZone;
 
         public PoolDB(string serverName, string userName, string passWord, string database)
         {
@@ -91,10 +101,17 @@ namespace Trinity.PoolDB
         }
 
         public SortedDictionary<uint, Creature> CreatureData => creatureData;
+        public SortedDictionary<uint, CreatureTemplate> CreatureTemplateData => creatureTemplateData;
         public SortedDictionary<uint, GameObject> GameObjectData => gameObjectData;
 
         public void LoadData()
         {
+            // Load DBC files
+            dbcMap = new Storage<MapEntry>($"{dbcFolder}Map.dbc");
+            dbcArea = new Storage<AreaTableEntry>($"{dbcFolder}AreaTable.dbc");
+            dbcZone = dbcArea.Where(row => row.Value.ParentAreaID == 0).
+                ToDictionary(row => row.Key, row => row.Value);
+
             // Load all data into internal structures
             currentStatus.maxItems = getTotalRows();
             currentStatus.currentItem = 0;
@@ -262,6 +279,12 @@ namespace Trinity.PoolDB
                             dynamicFlags = creatureRecords.GetUInt32(21),
                             scriptName = !creatureRecords.IsDBNull(22) ? creatureRecords.GetString(22) : null
                         };
+                        if (creature.zoneId != 0)
+                            creature.dbcZone = dbcZone[(int)creature.zoneId];
+                        if (creature.areaId != 0)
+                            creature.dbcArea = dbcArea[(int)creature.zoneId];
+                        creature.dbcMap = dbcMap[(int) creature.map];
+                        creatureTemplate?.objects.Add(creature);
                         creatureData.Add(creature.guid, creature);
                         UpdateStatus(null, ++currentStatus.currentItem, null);
                     }
@@ -382,6 +405,11 @@ namespace Trinity.PoolDB
                             state = gameObjectRecords.GetUInt32(17),
                             scriptName = !gameObjectRecords.IsDBNull(18) ? gameObjectRecords.GetString(18) : null
                         };
+                        if (gameObject.zoneId != 0)
+                            gameObject.dbcZone = dbcZone[(int)gameObject.zoneId];
+                        if (gameObject.areaId != 0)
+                            gameObject.dbcArea = dbcArea[(int)gameObject.zoneId];
+                        gameObject.dbcMap = dbcMap[(int)gameObject.map];
                         gameObjectData.Add(gameObject.guid, gameObject);
                         UpdateStatus(null, ++currentStatus.currentItem, null);
                     }
@@ -562,8 +590,13 @@ namespace Trinity.PoolDB
                             rotation0 = spawnPointRecords.GetFloat(9),
                             rotation1 = spawnPointRecords.GetFloat(10),
                             rotation2 = spawnPointRecords.GetFloat(11),
-                            rotation3 = spawnPointRecords.GetFloat(12)
+                            rotation3 = spawnPointRecords.GetFloat(12),
                         };
+                        if (spawnPoint.zoneId != 0)
+                            spawnPoint.dbcZone = dbcZone[(int)spawnPoint.zoneId];
+                        if (spawnPoint.areaId != 0)
+                            spawnPoint.dbcArea = dbcArea[(int)spawnPoint.zoneId];
+                        spawnPoint.dbcMap = dbcMap[(int)spawnPoint.map];
 
                         var thisMap = MapPoolItem.FindOrGetNew(mapPoolData, spawnPoint.map);
                         if (thisMap.spawnPoints.ContainsKey(spawnPoint.pointId))

@@ -4,6 +4,7 @@ using System.Data;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
+using Trinity.PoolDB;
 
 namespace Trinity.PoolManagerData
 {
@@ -24,6 +25,9 @@ namespace Trinity.PoolManagerData
         public int spawntimeSecs;
         public string scriptName;
         public List<LegacyPoolEntry> legacyPools;
+        public AreaTableEntry dbcZone;
+        public AreaTableEntry dbcArea;
+        public MapEntry dbcMap;
 
         public TrinityObject()
         {
@@ -53,7 +57,13 @@ namespace Trinity.PoolManagerData
         public string name;
         public string iconName;
         public List<PoolEntry> memberPools;
+        public List<TrinityObject> objects;
 
+        public TrinityObjectTemplate()
+        {
+            memberPools = new List<PoolEntry>();
+            objects = new List<TrinityObject>();
+        }
     }
 
     public class Creature : TrinityObject
@@ -104,13 +114,12 @@ namespace Trinity.PoolManagerData
         public uint trainerType;
         public uint trainerSpell;
 
-        public CreatureTemplate()
+        public CreatureTemplate() : base()
         {
             difficultyEntry = new uint[3];
             killCredit = new uint[2];
             modelid = new uint[4];
             unitFlags = new uint[2];
-            memberPools = new List<PoolEntry>();
             objectType = ObjectType.OBJECT_CREATURE;
         }
     }
@@ -142,7 +151,7 @@ namespace Trinity.PoolManagerData
         public string aIName;
         public string scriptName;
 
-        public GameObjectTemplate()
+        public GameObjectTemplate() : base()
         {
             data = new long[24];
             memberPools = new List<PoolEntry>();
@@ -298,6 +307,9 @@ namespace Trinity.PoolManagerData
         public float rotation1;
         public float rotation2;
         public float rotation3;
+        public AreaTableEntry dbcZone;
+        public AreaTableEntry dbcArea;
+        public MapEntry dbcMap;
     }
 
     public enum LegacyPoolType
