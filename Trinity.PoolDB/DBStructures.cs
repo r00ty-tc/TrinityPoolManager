@@ -29,6 +29,7 @@ namespace Trinity.PoolManagerData
         public AreaTableEntry dbcArea;
         public MapEntry dbcMap;
 
+        public override string ToString() => $"{guid} ({dbcArea})";
         public TrinityObject()
         {
             legacyPools = new List<LegacyPoolEntry>();
@@ -64,6 +65,8 @@ namespace Trinity.PoolManagerData
             memberPools = new List<PoolEntry>();
             objects = new List<TrinityObject>();
         }
+
+        public override string ToString() => $"{entry}: {name}";
     }
 
     public class Creature : TrinityObject
@@ -84,6 +87,7 @@ namespace Trinity.PoolManagerData
         {
             creatureTemplate = null;
         }
+
     }
 
     public class CreatureTemplate : TrinityObjectTemplate
@@ -113,6 +117,8 @@ namespace Trinity.PoolManagerData
         public int family;
         public uint trainerType;
         public uint trainerSpell;
+
+        public override string ToString() => $"{entry}: [{minLevel}-{maxLevel}] ({name})";
 
         public CreatureTemplate() : base()
         {

@@ -62,7 +62,7 @@ namespace Trinity.PoolManager
             (
                 from row in data.CreatureData.Values.Select(row => row.dbcMap).Distinct().OrderBy(row => row.Id)
             select new
-                    TreeNode($"{row.Id}: {row.MapName_Lang}")
+                    TreeNode(row.ToString())
             ).ToArray();
             creatureRoot.Nodes.AddRange(mapNodes);
 
@@ -75,7 +75,7 @@ namespace Trinity.PoolManager
                 (
                     from row in data.CreatureData.Values.Where(row => row.map.Equals(mapId) && row.dbcZone != null).Select(row => row.dbcZone).Distinct().OrderBy(row => row.ID)
                     select new
-                        TreeNode($"{row.ID}: {row.AreaName_Lang}")
+                        TreeNode(row.ToString())
                 ).ToArray();
                 mapNode.Nodes.AddRange(zoneNodes);
 
@@ -87,7 +87,7 @@ namespace Trinity.PoolManager
                     (
                         from row in data.CreatureData.Values.Where(row => row.zoneId.Equals(zoneId)).Select(row => row.creatureTemplate).Distinct().OrderBy(row => row.entry)
                         select new
-                            TreeNode($"{row.entry}: {row.name}")
+                            TreeNode(row.ToString())
                     ).ToArray();
                     zoneNode.Nodes.AddRange(creatureTemplateNodes);
 
@@ -97,8 +97,8 @@ namespace Trinity.PoolManager
                         var entryId = Convert.ToUInt32(templateNode.Text.Split(':')[0]);
                         var template = data.CreatureTemplateData[entryId];
                         var creatureNodes = (
-                            from row in template.objects
-                            select new TreeNode($"{row.guid}: {template.minLevel}-{template.maxLevel}")
+                            from row in template.objects.Where(row => row.zoneId.Equals(zoneId))
+                            select new TreeNode(row.ToString())
                         ).ToArray();
                         templateNode.Nodes.AddRange(creatureNodes);
                     }

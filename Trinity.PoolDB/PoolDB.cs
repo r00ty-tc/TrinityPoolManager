@@ -282,7 +282,7 @@ namespace Trinity.PoolDB
                         if (creature.zoneId != 0)
                             creature.dbcZone = dbcZone[(int)creature.zoneId];
                         if (creature.areaId != 0)
-                            creature.dbcArea = dbcArea[(int)creature.zoneId];
+                            creature.dbcArea = dbcArea[(int)creature.areaId];
                         creature.dbcMap = dbcMap[(int) creature.map];
                         creatureTemplate?.objects.Add(creature);
                         creatureData.Add(creature.guid, creature);
@@ -408,7 +408,7 @@ namespace Trinity.PoolDB
                         if (gameObject.zoneId != 0)
                             gameObject.dbcZone = dbcZone[(int)gameObject.zoneId];
                         if (gameObject.areaId != 0)
-                            gameObject.dbcArea = dbcArea[(int)gameObject.zoneId];
+                            gameObject.dbcArea = dbcArea[(int)gameObject.areaId];
                         gameObject.dbcMap = dbcMap[(int)gameObject.map];
                         gameObjectData.Add(gameObject.guid, gameObject);
                         UpdateStatus(null, ++currentStatus.currentItem, null);
@@ -595,7 +595,7 @@ namespace Trinity.PoolDB
                         if (spawnPoint.zoneId != 0)
                             spawnPoint.dbcZone = dbcZone[(int)spawnPoint.zoneId];
                         if (spawnPoint.areaId != 0)
-                            spawnPoint.dbcArea = dbcArea[(int)spawnPoint.zoneId];
+                            spawnPoint.dbcArea = dbcArea[(int)spawnPoint.areaId];
                         spawnPoint.dbcMap = dbcMap[(int)spawnPoint.map];
 
                         var thisMap = MapPoolItem.FindOrGetNew(mapPoolData, spawnPoint.map);
