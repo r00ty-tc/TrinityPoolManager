@@ -28,11 +28,13 @@ namespace Trinity.PoolManagerData
         public AreaTableEntry dbcZone;
         public AreaTableEntry dbcArea;
         public MapEntry dbcMap;
+        public TrinityObjectTemplate trinityTemplateObject;
 
         public override string ToString() => $"{guid} ({dbcArea})";
         public TrinityObject()
         {
             legacyPools = new List<LegacyPoolEntry>();
+            trinityTemplateObject = null;
         }
 
         public Creature AsCreature()
@@ -81,12 +83,12 @@ namespace Trinity.PoolManagerData
         public uint npcFlag;
         public uint unitFlags;
         public uint dynamicFlags;
-        public CreatureTemplate creatureTemplate;
+        //public CreatureTemplate creatureTemplate;
 
-        public Creature()
+        /*public Creature()
         {
             creatureTemplate = null;
-        }
+        }*/
 
     }
 
@@ -138,12 +140,12 @@ namespace Trinity.PoolManagerData
         public float rotation3;
         public uint animProgress;
         public uint state;
-        public GameObjectTemplate goTemplate;
+        //public GameObjectTemplate goTemplate;
 
-        public GameObject()
+        /*public GameObject()
         {
             goTemplate = null;
-        }
+        }*/
     }
 
     public class GameObjectTemplate : TrinityObjectTemplate

@@ -28,10 +28,10 @@ namespace Trinity.PoolDB
     {
         private const string dbcFolder = @"E:\Development\trinity\3.3.5\servers\3.3.5\DBCMaster\dbc\";      // This will be config, like DB login
         private readonly MySqlConnection sqlConnection;
-        private SortedDictionary<uint, Creature> creatureData;
-        private SortedDictionary<uint, GameObject> gameObjectData;
-        private SortedDictionary<uint, CreatureTemplate> creatureTemplateData;
-        private SortedDictionary<uint, GameObjectTemplate> gameObjectTemplateData;
+        private SortedDictionary<uint, TrinityObject> creatureData;
+        private SortedDictionary<uint, TrinityObject> gameObjectData;
+        private SortedDictionary<uint, TrinityObjectTemplate> creatureTemplateData;
+        private SortedDictionary<uint, TrinityObjectTemplate> gameObjectTemplateData;
         private SortedDictionary<uint, LegacyPoolEntry> legacyPoolData;
         private SortedDictionary<uint, MapPoolItem> mapPoolData;
         private Dictionary<uint, LegacyPoolEntry> unstructLegacyPoolData;
@@ -100,9 +100,10 @@ namespace Trinity.PoolDB
             //statusHandler(this, currentStatus);
         }
 
-        public SortedDictionary<uint, Creature> CreatureData => creatureData;
-        public SortedDictionary<uint, CreatureTemplate> CreatureTemplateData => creatureTemplateData;
-        public SortedDictionary<uint, GameObject> GameObjectData => gameObjectData;
+        public SortedDictionary<uint, TrinityObject> CreatureData => creatureData;
+        public SortedDictionary<uint, TrinityObjectTemplate> CreatureTemplateData => creatureTemplateData;
+        public SortedDictionary<uint, TrinityObject> GameObjectData => gameObjectData;
+        public SortedDictionary<uint, TrinityObjectTemplate> GameObjectTemplateData => gameObjectTemplateData;
 
         public void LoadData()
         {
@@ -155,7 +156,7 @@ namespace Trinity.PoolDB
             // ============================
             // Load creature_template table
             // ============================
-            creatureTemplateData = new SortedDictionary<uint, CreatureTemplate>();
+            creatureTemplateData = new SortedDictionary<uint, TrinityObjectTemplate>();
             var templateQuery =
                 @"SELECT entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, "
                 + @"modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, "
@@ -166,7 +167,7 @@ namespace Trinity.PoolDB
                 + @"RacialLeader, movementId, RegenHealth, mechanic_immune_mask, spell_school_immune_mask, flags_extra, ScriptName "
                 + "from creature_template";
 
-            creatureData = new SortedDictionary<uint, Creature>();
+            creatureData = new SortedDictionary<uint, TrinityObject>();
 
             UpdateStatus("Loading creature templates");
             using (var templateCmd = new MySqlCommand(templateQuery, sqlConnection))
@@ -247,7 +248,7 @@ namespace Trinity.PoolDB
                     {
                         var creatureId = creatureRecords.GetUInt32(1);
                         // Find template
-                        var result = creatureTemplateData.TryGetValue(creatureId, out CreatureTemplate creatureTemplate);
+                        var result = creatureTemplateData.TryGetValue(creatureId, out TrinityObjectTemplate creatureTemplate);
                         if (!result)
                             creatureTemplate = null;
 
@@ -256,7 +257,7 @@ namespace Trinity.PoolDB
                             type = ObjectType.OBJECT_CREATURE,
                             guid = creatureRecords.GetUInt32(0),
                             id = creatureRecords.GetUInt32(1),
-                            creatureTemplate = creatureTemplate,
+                            trinityTemplateObject = creatureTemplate,
                             map = creatureRecords.GetUInt32(2),
                             zoneId = creatureRecords.GetUInt32(3),
                             areaId = creatureRecords.GetUInt32(4),
@@ -297,7 +298,7 @@ namespace Trinity.PoolDB
             // ==============================
             // Load gameobject_template table
             // ==============================
-            gameObjectTemplateData = new SortedDictionary<uint, GameObjectTemplate>();
+            gameObjectTemplateData = new SortedDictionary<uint, TrinityObjectTemplate>();
             var templateQuery =
                 @"SELECT entry, type, displayId, name, IconName, castBarCaption, unk1, size, Data0, Data1, "
                 + @"Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10, Data11, Data12, "
@@ -305,7 +306,7 @@ namespace Trinity.PoolDB
                 + @"Data23, AIName, ScriptName, VerifiedBuild "
                 + "from gameobject_template";
 
-            gameObjectData = new SortedDictionary<uint, GameObject>();
+            gameObjectData = new SortedDictionary<uint, TrinityObject>();
 
             UpdateStatus("Loading gameobject templates");
             using (var templateCmd = new MySqlCommand(templateQuery, sqlConnection))
@@ -377,7 +378,7 @@ namespace Trinity.PoolDB
                     {
                         // Find template
                         var gameObjectId = gameObjectRecords.GetUInt32(1);
-                        var result = gameObjectTemplateData.TryGetValue(gameObjectId, out GameObjectTemplate gameObjectTemplate);
+                        var result = gameObjectTemplateData.TryGetValue(gameObjectId, out TrinityObjectTemplate gameObjectTemplate);
                         if (!result)
                             gameObjectTemplate = null;
 
@@ -386,7 +387,7 @@ namespace Trinity.PoolDB
                             type = ObjectType.OBJECT_GAMEOBJECT,
                             guid = gameObjectRecords.GetUInt32(0),
                             id = gameObjectRecords.GetUInt32(1),
-                            goTemplate = gameObjectTemplate,
+                            trinityTemplateObject = gameObjectTemplate,
                             map = gameObjectRecords.GetUInt32(2),
                             zoneId = gameObjectRecords.GetUInt32(3),
                             areaId = gameObjectRecords.GetUInt32(4),
@@ -410,6 +411,7 @@ namespace Trinity.PoolDB
                         if (gameObject.areaId != 0)
                             gameObject.dbcArea = dbcArea[(int)gameObject.areaId];
                         gameObject.dbcMap = dbcMap[(int)gameObject.map];
+                        gameObjectTemplate?.objects.Add(gameObject);
                         gameObjectData.Add(gameObject.guid, gameObject);
                         UpdateStatus(null, ++currentStatus.currentItem, null);
                     }
@@ -501,7 +503,7 @@ namespace Trinity.PoolDB
 
                                     break;
                                 case LegacyPoolType.POOLTYPE_CREATURE:
-                                    if (creatureData.TryGetValue(poolObject.spawnId, out Creature creature))
+                                    if (creatureData.TryGetValue(poolObject.spawnId, out TrinityObject creature))
                                     {
                                         poolObject.trinityObject = creature;
                                         poolEntry.poolItems.Add(poolObject);
@@ -510,7 +512,7 @@ namespace Trinity.PoolDB
 
                                     break;
                                 case LegacyPoolType.POOLTYPE_GAMEOBJECT:
-                                    if (gameObjectData.TryGetValue(poolObject.spawnId, out GameObject gameObject))
+                                    if (gameObjectData.TryGetValue(poolObject.spawnId, out TrinityObject gameObject))
                                     {
                                         poolObject.trinityObject = gameObject;
                                         poolEntry.poolItems.Add(poolObject);
@@ -733,7 +735,7 @@ namespace Trinity.PoolDB
                             throw new Exception($"Map: {mapId} missing Pool {poolId} for Creature {entry}");
 
                         // Validate/fetch creature template
-                        if (!creatureTemplateData.TryGetValue(entry, out CreatureTemplate creatureTemplate))
+                        if (!creatureTemplateData.TryGetValue(entry, out TrinityObjectTemplate creatureTemplate))
                             throw new DataException($"Map: {mapId}, Pool {poolId} has invalid creature {entry}");
 
                         var creature = new PoolCreature();
@@ -782,7 +784,7 @@ namespace Trinity.PoolDB
                             throw new Exception($"Map: {mapId} missing Pool {poolId} for Gameobject {entry}");
 
                         // Validate/fetch creature template
-                        if (!gameObjectTemplateData.TryGetValue(entry, out GameObjectTemplate gameObjectTemplate))
+                        if (!gameObjectTemplateData.TryGetValue(entry, out TrinityObjectTemplate gameObjectTemplate))
                             throw new DataException($"Map: {mapId}, Pool {poolId} has invalid creature {entry}");
 
                         var gameObject = new PoolGameObject();

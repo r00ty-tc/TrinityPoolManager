@@ -23,6 +23,7 @@ namespace Trinity.PoolManager
             pgStatus.Minimum = 0;
             pgStatus.Anchor = AnchorStyles.Left & AnchorStyles.Bottom & AnchorStyles.Right;
             tvOverview.Nodes.Clear();
+            updateLocalStatus("Ready", 0, 1);
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
@@ -52,28 +53,40 @@ namespace Trinity.PoolManager
             var creatureRoot = tvOverview.Nodes.Add("creatureRoot","Creatures");
             var gameObjectRoot = tvOverview.Nodes.Add("gameObjectRoot", "Game Objects");
 
-            var updated = 0;
             var maxUpdated = data.CreatureData.Count;
-
             updateLocalStatus("Updating Treeview for Creatures", 0, maxUpdated);
+            updateTreeviewObjects(creatureRoot, data.CreatureData, data.CreatureTemplateData);
 
+            maxUpdated = data.GameObjectData.Count;
+            updateLocalStatus("Updating Treeview for GameObjects", 0, maxUpdated);
+            updateTreeviewObjects(gameObjectRoot, data.GameObjectData, data.GameObjectTemplateData);
+            updateLocalStatus("Ready", 0, 1);
+
+            tvOverview.EndUpdate();
+            tvOverview.ResumeLayout();
+            
+        }
+
+        private void updateTreeviewObjects(TreeNode rootNode, SortedDictionary<uint, TrinityObject> objectData, SortedDictionary<uint, TrinityObjectTemplate> templateData)
+        {
+            int updated = 0;
             // Add unique maps first
             var mapNodes =
             (
-                from row in data.CreatureData.Values.Select(row => row.dbcMap).Distinct().OrderBy(row => row.Id)
-            select new
-                    TreeNode(row.ToString())
+                from row in objectData.Values.Select(row => row.dbcMap).Distinct().OrderBy(row => row.Id)
+                select new
+                        TreeNode(row.ToString())
             ).ToArray();
-            creatureRoot.Nodes.AddRange(mapNodes);
+            rootNode.Nodes.AddRange(mapNodes);
 
             // Probably a better way to go about this
-            foreach (var mapNode in creatureRoot.Nodes.Cast<TreeNode>())
+            foreach (var mapNode in rootNode.Nodes.Cast<TreeNode>())
             {
                 var mapId = Convert.ToUInt32(mapNode.Text.Split(':')[0]);
                 // Add distinct zones per map
                 var zoneNodes =
                 (
-                    from row in data.CreatureData.Values.Where(row => row.map.Equals(mapId) && row.dbcZone != null).Select(row => row.dbcZone).Distinct().OrderBy(row => row.ID)
+                    from row in objectData.Values.Where(row => row.map.Equals(mapId) && row.dbcZone != null).Select(row => row.dbcZone).Distinct().OrderBy(row => row.ID)
                     select new
                         TreeNode(row.ToString())
                 ).ToArray();
@@ -81,33 +94,32 @@ namespace Trinity.PoolManager
 
                 foreach (var zoneNode in zoneNodes)
                 {
-                    // Distinct creature templates
+                    // Distinct object templates
                     var zoneId = Convert.ToUInt32(zoneNode.Text.Split(':')[0]);
-                    var creatureTemplateNodes =
+                    var objectTemplateNodes =
                     (
-                        from row in data.CreatureData.Values.Where(row => row.zoneId.Equals(zoneId)).Select(row => row.creatureTemplate).Distinct().OrderBy(row => row.entry)
+                        from row in objectData.Values.Where(row => row.zoneId.Equals(zoneId)).Select(row => row.trinityTemplateObject).Distinct().OrderBy(row => row.entry)
                         select new
                             TreeNode(row.ToString())
                     ).ToArray();
-                    zoneNode.Nodes.AddRange(creatureTemplateNodes);
+                    zoneNode.Nodes.AddRange(objectTemplateNodes);
 
-                    foreach (var templateNode in creatureTemplateNodes)
+                    foreach (var templateNode in objectTemplateNodes)
                     {
-                        // Add creatures for each template
+                        // Add objects for each template
                         var entryId = Convert.ToUInt32(templateNode.Text.Split(':')[0]);
-                        var template = data.CreatureTemplateData[entryId];
-                        var creatureNodes = (
+                        var template = templateData[entryId];
+                        var objectNodes = (
                             from row in template.objects.Where(row => row.zoneId.Equals(zoneId))
                             select new TreeNode(row.ToString())
                         ).ToArray();
-                        templateNode.Nodes.AddRange(creatureNodes);
+                        templateNode.Nodes.AddRange(objectNodes);
+                        updated += objectNodes.Length;
+                        updateLocalStatus(null, updated, null, true);
                     }
                 }
             }
 
-            tvOverview.EndUpdate();
-            tvOverview.ResumeLayout();
-            
         }
 
         private void updateStatusDB()
@@ -119,10 +131,10 @@ namespace Trinity.PoolManager
             Application.DoEvents();
         }
 
-        private void updateLocalStatus(string statusText, int? value, int? maxValue)
+        private void updateLocalStatus(string statusText, int? value, int? maxValue, bool noDelay = false)
         {
             var maxValueInt = maxValue.HasValue ? maxValue.Value : pgStatus.Maximum;
-            if (value.HasValue && value % (maxValueInt / 100) == 0)
+            if (noDelay || (value.HasValue && value % ((maxValueInt / 100)+1) == 0))
             {
                 if (statusText != null)
                     tsStatusText.Text = statusText;
@@ -131,7 +143,7 @@ namespace Trinity.PoolManager
                     pgStatus.Maximum = maxValue.Value;
 
                 if (value.HasValue)
-                    pgStatus.Value = value.Value;
+                    pgStatus.Value = Math.Min(value.Value, pgStatus.Maximum);
 
                 Application.DoEvents();
             }
@@ -142,6 +154,5 @@ namespace Trinity.PoolManager
             // It's 2021 and status bar has no auto resize.
             pgStatus.Width = ssStatus.Width - tsStatusText.Width - 20;
         }
-
     }
 }
