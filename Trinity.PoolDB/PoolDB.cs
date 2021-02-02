@@ -26,7 +26,6 @@ namespace Trinity.PoolDB
     
     public class PoolDB
     {
-        private const string dbcFolder = @"E:\Development\trinity\3.3.5\servers\3.3.5\DBCMaster\dbc\";      // This will be config, like DB login
         private readonly MySqlConnection sqlConnection;
         private SortedDictionary<uint, TrinityObject> creatureData;
         private SortedDictionary<uint, TrinityObject> gameObjectData;
@@ -40,9 +39,11 @@ namespace Trinity.PoolDB
         private Storage<MapEntry> dbcMap;
         private Storage<AreaTableEntry> dbcArea;
         private Dictionary<int, AreaTableEntry> dbcZone;
+        private ConfigData configData;
 
-        public PoolDB(string serverName, string userName, string passWord, string database)
+        public PoolDB(ConfigData config)
         {
+            configData = config;
             creatureData = null;
             gameObjectData = null;
             legacyPoolData = null;
@@ -53,10 +54,36 @@ namespace Trinity.PoolDB
 
             var builder = new MySqlConnectionStringBuilder
             {
-                Server = serverName, UserID = userName, Password = passWord, Database = database
+                Server = configData.SqlServerHost,
+                UserID = configData.SqlServerUser,
+                Password = configData.SqlServerPass,
+                Database = configData.SqlServerDB
             };
             sqlConnection = new MySqlConnection(builder.ToString());
             sqlConnection.Open();
+
+        }
+
+        public static string[] GetDatabases(string serverName, string userName, string passWord)
+        {
+            var builder = new MySqlConnectionStringBuilder
+            {
+                Server = serverName,
+                UserID = userName,
+                Password = passWord,
+            };
+            var returnValue = new List<string>();
+            using (var tempConnection = new MySqlConnection(builder.ToString()))
+            {
+                tempConnection.Open();
+                var dbListQuery = "SHOW DATABASES";
+                using (var dbListCmd = new MySqlCommand(dbListQuery, tempConnection))
+                    using (var dbListRecords = dbListCmd.ExecuteReader())
+                        while (dbListRecords.Read())
+                            returnValue.Add(dbListRecords.GetString(0));
+                tempConnection.Close();
+                return returnValue.ToArray();
+            }
         }
 
         ~PoolDB()
@@ -108,8 +135,8 @@ namespace Trinity.PoolDB
         public void LoadData()
         {
             // Load DBC files
-            dbcMap = new Storage<MapEntry>($"{dbcFolder}Map.dbc");
-            dbcArea = new Storage<AreaTableEntry>($"{dbcFolder}AreaTable.dbc");
+            dbcMap = new Storage<MapEntry>($"{configData.DbcFolder}Map.dbc");
+            dbcArea = new Storage<AreaTableEntry>($"{configData.DbcFolder}AreaTable.dbc");
             dbcZone = dbcArea.Where(row => row.Value.ParentAreaID == 0).
                 ToDictionary(row => row.Key, row => row.Value);
 

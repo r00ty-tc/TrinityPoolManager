@@ -3,23 +3,55 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 using Trinity.PoolManagerData;
 
 namespace Trinity.PoolManager
 {
     using Trinity.PoolDB;
+
     public partial class PoolManagerForm : Form
     {
         private PoolDB data;
+        private PoolManagerConfig config;
+
         public PoolManagerForm()
         {
             InitializeComponent();
-            data = new PoolDB("localhost", "trinity", "trinity", "world_335_pooling-s3");
+            InitializeLocal();
+        }
+
+        private void InitializeLocal()
+        {
+            config = new PoolManagerConfig();
+            var configState = config.ValidateConfig(true);
+            if (configState != null)
+            {
+                tbMain.SelectTab(tpConfig);
+                Application.DoEvents();
+                MessageBox.Show($"Unable to load configuration{Environment.NewLine}{configState}{Environment.NewLine}Please correct configuration and save");
+                return;
+            }
+
+            // Maybe it will actually run destructor
+            if (data != null)
+                data = null;
+
+            data = new PoolDB(config.Data);
+
+            // Set config to form
+            txtSqlServerHost.Text = config.Data.SqlServerHost;
+            txtSqlUsername.Text = config.Data.SqlServerUser;
+            txtSqlPassword.Text = config.Data.SqlServerPass;
+            cbSqlDatabase.Text = config.Data.SqlServerDB;
+            txtTrinityDBCFolder.Text = config.Data.DbcFolder;
+
             pgStatus.Minimum = 0;
             pgStatus.Anchor = AnchorStyles.Left & AnchorStyles.Bottom & AnchorStyles.Right;
             tvOverview.Nodes.Clear();
@@ -30,10 +62,7 @@ namespace Trinity.PoolManager
         {
             btnLoad.Enabled = false;
             // Run this as a new thread, so the window is easier to keep up to date
-            var task = new Thread(() =>
-            {
-                data.LoadData();
-            });
+            var task = new Thread(() => { data.LoadData(); });
 
             task.Start();
             while (task.IsAlive)
@@ -50,7 +79,7 @@ namespace Trinity.PoolManager
 
             tvOverview.SuspendLayout();
             tvOverview.BeginUpdate();
-            var creatureRoot = tvOverview.Nodes.Add("creatureRoot","Creatures");
+            var creatureRoot = tvOverview.Nodes.Add("creatureRoot", "Creatures");
             var gameObjectRoot = tvOverview.Nodes.Add("gameObjectRoot", "Game Objects");
 
             var maxUpdated = data.CreatureData.Count;
@@ -64,10 +93,11 @@ namespace Trinity.PoolManager
 
             tvOverview.EndUpdate();
             tvOverview.ResumeLayout();
-            
+
         }
 
-        private void updateTreeviewObjects(TreeNode rootNode, SortedDictionary<uint, TrinityObject> objectData, SortedDictionary<uint, TrinityObjectTemplate> templateData)
+        private void updateTreeviewObjects(TreeNode rootNode, SortedDictionary<uint, TrinityObject> objectData,
+            SortedDictionary<uint, TrinityObjectTemplate> templateData)
         {
             int updated = 0;
             // Add unique maps first
@@ -75,7 +105,7 @@ namespace Trinity.PoolManager
             (
                 from row in objectData.Values.Select(row => row.dbcMap).Distinct().OrderBy(row => row.Id)
                 select new
-                        TreeNode(row.ToString())
+                    TreeNode(row.ToString())
             ).ToArray();
             rootNode.Nodes.AddRange(mapNodes);
 
@@ -86,7 +116,8 @@ namespace Trinity.PoolManager
                 // Add distinct zones per map
                 var zoneNodes =
                 (
-                    from row in objectData.Values.Where(row => row.map.Equals(mapId) && row.dbcZone != null).Select(row => row.dbcZone).Distinct().OrderBy(row => row.ID)
+                    from row in objectData.Values.Where(row => row.map.Equals(mapId) && row.dbcZone != null)
+                        .Select(row => row.dbcZone).Distinct().OrderBy(row => row.ID)
                     select new
                         TreeNode(row.ToString())
                 ).ToArray();
@@ -98,7 +129,8 @@ namespace Trinity.PoolManager
                     var zoneId = Convert.ToUInt32(zoneNode.Text.Split(':')[0]);
                     var objectTemplateNodes =
                     (
-                        from row in objectData.Values.Where(row => row.zoneId.Equals(zoneId)).Select(row => row.trinityTemplateObject).Distinct().OrderBy(row => row.entry)
+                        from row in objectData.Values.Where(row => row.zoneId.Equals(zoneId))
+                            .Select(row => row.trinityTemplateObject).Distinct().OrderBy(row => row.entry)
                         select new
                             TreeNode(row.ToString())
                     ).ToArray();
@@ -126,15 +158,15 @@ namespace Trinity.PoolManager
         {
             var result = data.GetStatus();
             tsStatusText.Text = result.currentStatus ?? string.Empty;
-            pgStatus.Maximum = (int)result.maxItems;
-            pgStatus.Value = (int)result.currentItem;
+            pgStatus.Maximum = (int) result.maxItems;
+            pgStatus.Value = (int) result.currentItem;
             Application.DoEvents();
         }
 
         private void updateLocalStatus(string statusText, int? value, int? maxValue, bool noDelay = false)
         {
             var maxValueInt = maxValue.HasValue ? maxValue.Value : pgStatus.Maximum;
-            if (noDelay || (value.HasValue && value % ((maxValueInt / 100)+1) == 0))
+            if (noDelay || (value.HasValue && value % ((maxValueInt / 100) + 1) == 0))
             {
                 if (statusText != null)
                     tsStatusText.Text = statusText;
@@ -154,5 +186,91 @@ namespace Trinity.PoolManager
             // It's 2021 and status bar has no auto resize.
             pgStatus.Width = ssStatus.Width - tsStatusText.Width - 20;
         }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var dbList = PoolDB.GetDatabases(txtSqlServerHost.Text, txtSqlUsername.Text, txtSqlPassword.Text);
+                cbSqlDatabase.Items.AddRange(dbList);
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show($"Unable to open MySQL DB. Error {ex.Number}: {ex.Message}", "MySQL Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void btnDBCBrowse_Click(object sender, EventArgs e)
+        {
+            using (var dbcDialog = new FolderBrowserDialog())
+            {
+                if (Directory.Exists(txtTrinityDBCFolder.Text))
+                    dbcDialog.SelectedPath = txtTrinityDBCFolder.Text;
+
+                if (dbcDialog.ShowDialog(this) == DialogResult.OK && !string.IsNullOrWhiteSpace(dbcDialog.SelectedPath))
+                {
+                    if (!isTrinityFolderValid(dbcDialog.SelectedPath))
+                        MessageBox.Show($"DBC files not found in location {txtTrinityDBCFolder.Text}",
+                            "DBC folder selection error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    else
+                        txtTrinityDBCFolder.Text = dbcDialog.SelectedPath;
+                }
+            }
+        }
+
+        private bool isTrinityFolderValid(string folder)
+        {
+            if (!folder.Last().Equals('\\'))
+                folder += "\\";
+            if (!File.Exists(folder + "AreaTable.dbc"))
+                return false;
+            if (!File.Exists(folder + "Map.dbc"))
+                return false;
+
+            return true;
+        }
+
+        private void btnSaveConfig_Click(object sender, EventArgs e)
+        {
+            var configData = config.Data;
+            configData.SqlServerHost = txtSqlServerHost.Text;
+            configData.SqlServerUser = txtSqlUsername.Text;
+            configData.SqlServerPass = txtSqlPassword.Text;
+            configData.SqlServerDB = cbSqlDatabase.Text;
+            configData.DbcFolder = txtTrinityDBCFolder.Text;
+            var result = config.SaveConfig(true);
+            if (result != null)
+                MessageBox.Show(result, "Error writing configuration", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            updateConfigFields();
+            InitializeLocal();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            var result =
+                MessageBox.Show(
+                    "This will overwrite any changes you have made and reload from configuration file" +
+                    Environment.NewLine + Environment.NewLine + "Are you sure?", "Confirmation",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                if (!config.LoadConfig())
+                    MessageBox.Show("Error reading configuration", "Config load", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                updateConfigFields();
+            }
+        }
+
+        private void updateConfigFields()
+        {
+            var configData = config.Data;
+            txtSqlServerHost.Text = configData.SqlServerHost;
+            txtSqlUsername.Text = configData.SqlServerUser;
+            txtSqlPassword.Text = configData.SqlServerPass;
+            cbSqlDatabase.Text = configData.SqlServerDB;
+            txtTrinityDBCFolder.Text = configData.DbcFolder;
+        }
+
     }
 }
