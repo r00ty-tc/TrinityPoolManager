@@ -37,7 +37,29 @@ namespace Trinity.PoolManager
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnLoad = new System.Windows.Forms.Button();
             this.tvOverview = new System.Windows.Forms.TreeView();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tbOverviewObjectInfo = new System.Windows.Forms.TabControl();
+            this.tpCreatureObject = new System.Windows.Forms.TabPage();
+            this.txtCreatureEntry = new System.Windows.Forms.TextBox();
+            this.txtCreatureId = new System.Windows.Forms.TextBox();
+            this.lblCreatureIdEntry = new System.Windows.Forms.Label();
+            this.txtCreaturePositionZ = new System.Windows.Forms.TextBox();
+            this.lblCreaturePositionZ = new System.Windows.Forms.Label();
+            this.txtCreatureAreaName = new System.Windows.Forms.TextBox();
+            this.txtCreatureAreaId = new System.Windows.Forms.TextBox();
+            this.lblCreatureArea = new System.Windows.Forms.Label();
+            this.txtCreaturePositionX = new System.Windows.Forms.TextBox();
+            this.lblCreaturePositionX = new System.Windows.Forms.Label();
+            this.txtCreatureMapName = new System.Windows.Forms.TextBox();
+            this.txtCreatureMapId = new System.Windows.Forms.TextBox();
+            this.lblCreatureMap = new System.Windows.Forms.Label();
+            this.txtCreaturePositionY = new System.Windows.Forms.TextBox();
+            this.lblCreaturePositionY = new System.Windows.Forms.Label();
+            this.txtCreatureZoneName = new System.Windows.Forms.TextBox();
+            this.txtCreatureZoneId = new System.Windows.Forms.TextBox();
+            this.lblCreatureZone = new System.Windows.Forms.Label();
+            this.tpCreatureTemplate = new System.Windows.Forms.TabPage();
+            this.tpGameObject = new System.Windows.Forms.TabPage();
+            this.tpGameObjectTemplate = new System.Windows.Forms.TabPage();
             this.tpPoolConversion = new System.Windows.Forms.TabPage();
             this.tpPoolDesigner = new System.Windows.Forms.TabPage();
             this.tpConfig = new System.Windows.Forms.TabPage();
@@ -64,6 +86,8 @@ namespace Trinity.PoolManager
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.tbOverviewObjectInfo.SuspendLayout();
+            this.tpCreatureObject.SuspendLayout();
             this.tpConfig.SuspendLayout();
             this.grpDBCLocationConfig.SuspendLayout();
             this.grpSqlConfig.SuspendLayout();
@@ -134,7 +158,7 @@ namespace Trinity.PoolManager
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
+            this.splitContainer1.Panel2.Controls.Add(this.tbOverviewObjectInfo);
             this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.splitContainer1.Size = new System.Drawing.Size(786, 394);
             this.splitContainer1.SplitterDistance = 202;
@@ -162,15 +186,229 @@ namespace Trinity.PoolManager
             this.tvOverview.Name = "tvOverview";
             this.tvOverview.Size = new System.Drawing.Size(196, 354);
             this.tvOverview.TabIndex = 10;
+            this.tvOverview.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvOverview_AfterSelect);
             // 
-            // groupBox1
+            // tbOverviewObjectInfo
             // 
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(576, 195);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Object Data";
+            this.tbOverviewObjectInfo.Controls.Add(this.tpCreatureObject);
+            this.tbOverviewObjectInfo.Controls.Add(this.tpCreatureTemplate);
+            this.tbOverviewObjectInfo.Controls.Add(this.tpGameObject);
+            this.tbOverviewObjectInfo.Controls.Add(this.tpGameObjectTemplate);
+            this.tbOverviewObjectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbOverviewObjectInfo.Enabled = false;
+            this.tbOverviewObjectInfo.Location = new System.Drawing.Point(0, 0);
+            this.tbOverviewObjectInfo.Name = "tbOverviewObjectInfo";
+            this.tbOverviewObjectInfo.SelectedIndex = 0;
+            this.tbOverviewObjectInfo.Size = new System.Drawing.Size(582, 394);
+            this.tbOverviewObjectInfo.TabIndex = 0;
+            // 
+            // tpCreatureObject
+            // 
+            this.tpCreatureObject.Controls.Add(this.txtCreatureEntry);
+            this.tpCreatureObject.Controls.Add(this.txtCreatureId);
+            this.tpCreatureObject.Controls.Add(this.lblCreatureIdEntry);
+            this.tpCreatureObject.Controls.Add(this.txtCreaturePositionZ);
+            this.tpCreatureObject.Controls.Add(this.lblCreaturePositionZ);
+            this.tpCreatureObject.Controls.Add(this.txtCreatureAreaName);
+            this.tpCreatureObject.Controls.Add(this.txtCreatureAreaId);
+            this.tpCreatureObject.Controls.Add(this.lblCreatureArea);
+            this.tpCreatureObject.Controls.Add(this.txtCreaturePositionX);
+            this.tpCreatureObject.Controls.Add(this.lblCreaturePositionX);
+            this.tpCreatureObject.Controls.Add(this.txtCreatureMapName);
+            this.tpCreatureObject.Controls.Add(this.txtCreatureMapId);
+            this.tpCreatureObject.Controls.Add(this.lblCreatureMap);
+            this.tpCreatureObject.Controls.Add(this.txtCreaturePositionY);
+            this.tpCreatureObject.Controls.Add(this.lblCreaturePositionY);
+            this.tpCreatureObject.Controls.Add(this.txtCreatureZoneName);
+            this.tpCreatureObject.Controls.Add(this.txtCreatureZoneId);
+            this.tpCreatureObject.Controls.Add(this.lblCreatureZone);
+            this.tpCreatureObject.Location = new System.Drawing.Point(4, 24);
+            this.tpCreatureObject.Name = "tpCreatureObject";
+            this.tpCreatureObject.Padding = new System.Windows.Forms.Padding(3);
+            this.tpCreatureObject.Size = new System.Drawing.Size(574, 366);
+            this.tpCreatureObject.TabIndex = 0;
+            this.tpCreatureObject.Text = "Creature";
+            this.tpCreatureObject.UseVisualStyleBackColor = true;
+            // 
+            // txtCreatureEntry
+            // 
+            this.txtCreatureEntry.Location = new System.Drawing.Point(146, 97);
+            this.txtCreatureEntry.Name = "txtCreatureEntry";
+            this.txtCreatureEntry.Size = new System.Drawing.Size(74, 23);
+            this.txtCreatureEntry.TabIndex = 17;
+            // 
+            // txtCreatureId
+            // 
+            this.txtCreatureId.Location = new System.Drawing.Point(66, 97);
+            this.txtCreatureId.Name = "txtCreatureId";
+            this.txtCreatureId.Size = new System.Drawing.Size(74, 23);
+            this.txtCreatureId.TabIndex = 16;
+            // 
+            // lblCreatureIdEntry
+            // 
+            this.lblCreatureIdEntry.AutoSize = true;
+            this.lblCreatureIdEntry.Location = new System.Drawing.Point(10, 100);
+            this.lblCreatureIdEntry.Name = "lblCreatureIdEntry";
+            this.lblCreatureIdEntry.Size = new System.Drawing.Size(50, 15);
+            this.lblCreatureIdEntry.TabIndex = 15;
+            this.lblCreatureIdEntry.Text = "ID/Entry";
+            // 
+            // txtCreaturePositionZ
+            // 
+            this.txtCreaturePositionZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCreaturePositionZ.Location = new System.Drawing.Point(451, 68);
+            this.txtCreaturePositionZ.Name = "txtCreaturePositionZ";
+            this.txtCreaturePositionZ.Size = new System.Drawing.Size(120, 23);
+            this.txtCreaturePositionZ.TabIndex = 14;
+            // 
+            // lblCreaturePositionZ
+            // 
+            this.lblCreaturePositionZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCreaturePositionZ.AutoSize = true;
+            this.lblCreaturePositionZ.Location = new System.Drawing.Point(431, 71);
+            this.lblCreaturePositionZ.Name = "lblCreaturePositionZ";
+            this.lblCreaturePositionZ.Size = new System.Drawing.Size(14, 15);
+            this.lblCreaturePositionZ.TabIndex = 13;
+            this.lblCreaturePositionZ.Text = "Z";
+            // 
+            // txtCreatureAreaName
+            // 
+            this.txtCreatureAreaName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCreatureAreaName.Location = new System.Drawing.Point(146, 68);
+            this.txtCreatureAreaName.Name = "txtCreatureAreaName";
+            this.txtCreatureAreaName.Size = new System.Drawing.Size(279, 23);
+            this.txtCreatureAreaName.TabIndex = 12;
+            // 
+            // txtCreatureAreaId
+            // 
+            this.txtCreatureAreaId.Location = new System.Drawing.Point(66, 68);
+            this.txtCreatureAreaId.Name = "txtCreatureAreaId";
+            this.txtCreatureAreaId.Size = new System.Drawing.Size(74, 23);
+            this.txtCreatureAreaId.TabIndex = 11;
+            // 
+            // lblCreatureArea
+            // 
+            this.lblCreatureArea.AutoSize = true;
+            this.lblCreatureArea.Location = new System.Drawing.Point(10, 71);
+            this.lblCreatureArea.Name = "lblCreatureArea";
+            this.lblCreatureArea.Size = new System.Drawing.Size(31, 15);
+            this.lblCreatureArea.TabIndex = 10;
+            this.lblCreatureArea.Text = "Area";
+            // 
+            // txtCreaturePositionX
+            // 
+            this.txtCreaturePositionX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCreaturePositionX.Location = new System.Drawing.Point(451, 10);
+            this.txtCreaturePositionX.Name = "txtCreaturePositionX";
+            this.txtCreaturePositionX.Size = new System.Drawing.Size(120, 23);
+            this.txtCreaturePositionX.TabIndex = 9;
+            // 
+            // lblCreaturePositionX
+            // 
+            this.lblCreaturePositionX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCreaturePositionX.AutoSize = true;
+            this.lblCreaturePositionX.Location = new System.Drawing.Point(431, 13);
+            this.lblCreaturePositionX.Name = "lblCreaturePositionX";
+            this.lblCreaturePositionX.Size = new System.Drawing.Size(14, 15);
+            this.lblCreaturePositionX.TabIndex = 8;
+            this.lblCreaturePositionX.Text = "X";
+            // 
+            // txtCreatureMapName
+            // 
+            this.txtCreatureMapName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCreatureMapName.Location = new System.Drawing.Point(146, 10);
+            this.txtCreatureMapName.Name = "txtCreatureMapName";
+            this.txtCreatureMapName.Size = new System.Drawing.Size(279, 23);
+            this.txtCreatureMapName.TabIndex = 7;
+            // 
+            // txtCreatureMapId
+            // 
+            this.txtCreatureMapId.Location = new System.Drawing.Point(66, 10);
+            this.txtCreatureMapId.Name = "txtCreatureMapId";
+            this.txtCreatureMapId.Size = new System.Drawing.Size(74, 23);
+            this.txtCreatureMapId.TabIndex = 6;
+            // 
+            // lblCreatureMap
+            // 
+            this.lblCreatureMap.AutoSize = true;
+            this.lblCreatureMap.Location = new System.Drawing.Point(10, 13);
+            this.lblCreatureMap.Name = "lblCreatureMap";
+            this.lblCreatureMap.Size = new System.Drawing.Size(31, 15);
+            this.lblCreatureMap.TabIndex = 5;
+            this.lblCreatureMap.Text = "Map";
+            // 
+            // txtCreaturePositionY
+            // 
+            this.txtCreaturePositionY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCreaturePositionY.Location = new System.Drawing.Point(451, 39);
+            this.txtCreaturePositionY.Name = "txtCreaturePositionY";
+            this.txtCreaturePositionY.Size = new System.Drawing.Size(120, 23);
+            this.txtCreaturePositionY.TabIndex = 4;
+            // 
+            // lblCreaturePositionY
+            // 
+            this.lblCreaturePositionY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCreaturePositionY.AutoSize = true;
+            this.lblCreaturePositionY.Location = new System.Drawing.Point(431, 42);
+            this.lblCreaturePositionY.Name = "lblCreaturePositionY";
+            this.lblCreaturePositionY.Size = new System.Drawing.Size(14, 15);
+            this.lblCreaturePositionY.TabIndex = 3;
+            this.lblCreaturePositionY.Text = "Y";
+            // 
+            // txtCreatureZoneName
+            // 
+            this.txtCreatureZoneName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCreatureZoneName.Location = new System.Drawing.Point(146, 39);
+            this.txtCreatureZoneName.Name = "txtCreatureZoneName";
+            this.txtCreatureZoneName.Size = new System.Drawing.Size(279, 23);
+            this.txtCreatureZoneName.TabIndex = 2;
+            // 
+            // txtCreatureZoneId
+            // 
+            this.txtCreatureZoneId.Location = new System.Drawing.Point(66, 39);
+            this.txtCreatureZoneId.Name = "txtCreatureZoneId";
+            this.txtCreatureZoneId.Size = new System.Drawing.Size(74, 23);
+            this.txtCreatureZoneId.TabIndex = 1;
+            // 
+            // lblCreatureZone
+            // 
+            this.lblCreatureZone.AutoSize = true;
+            this.lblCreatureZone.Location = new System.Drawing.Point(10, 42);
+            this.lblCreatureZone.Name = "lblCreatureZone";
+            this.lblCreatureZone.Size = new System.Drawing.Size(34, 15);
+            this.lblCreatureZone.TabIndex = 0;
+            this.lblCreatureZone.Text = "Zone";
+            // 
+            // tpCreatureTemplate
+            // 
+            this.tpCreatureTemplate.Location = new System.Drawing.Point(4, 24);
+            this.tpCreatureTemplate.Name = "tpCreatureTemplate";
+            this.tpCreatureTemplate.Padding = new System.Windows.Forms.Padding(3);
+            this.tpCreatureTemplate.Size = new System.Drawing.Size(574, 366);
+            this.tpCreatureTemplate.TabIndex = 1;
+            this.tpCreatureTemplate.Text = "Creature Template";
+            this.tpCreatureTemplate.UseVisualStyleBackColor = true;
+            // 
+            // tpGameObject
+            // 
+            this.tpGameObject.Location = new System.Drawing.Point(4, 24);
+            this.tpGameObject.Name = "tpGameObject";
+            this.tpGameObject.Size = new System.Drawing.Size(574, 366);
+            this.tpGameObject.TabIndex = 2;
+            this.tpGameObject.Text = "GameObject";
+            this.tpGameObject.UseVisualStyleBackColor = true;
+            // 
+            // tpGameObjectTemplate
+            // 
+            this.tpGameObjectTemplate.Location = new System.Drawing.Point(4, 24);
+            this.tpGameObjectTemplate.Name = "tpGameObjectTemplate";
+            this.tpGameObjectTemplate.Size = new System.Drawing.Size(574, 366);
+            this.tpGameObjectTemplate.TabIndex = 3;
+            this.tpGameObjectTemplate.Text = "GameObject Template";
+            this.tpGameObjectTemplate.UseVisualStyleBackColor = true;
             // 
             // tpPoolConversion
             // 
@@ -385,6 +623,9 @@ namespace Trinity.PoolManager
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.tbOverviewObjectInfo.ResumeLayout(false);
+            this.tpCreatureObject.ResumeLayout(false);
+            this.tpCreatureObject.PerformLayout();
             this.tpConfig.ResumeLayout(false);
             this.grpDBCLocationConfig.ResumeLayout(false);
             this.grpDBCLocationConfig.PerformLayout();
@@ -406,7 +647,6 @@ namespace Trinity.PoolManager
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.TreeView tvOverview;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TabPage tpConfig;
         private System.Windows.Forms.GroupBox grpSqlConfig;
         private System.Windows.Forms.Label lblSqlDatabase;
@@ -424,6 +664,29 @@ namespace Trinity.PoolManager
         private System.Windows.Forms.Label lblTrinityDBCFolder;
         private System.Windows.Forms.Button btnSaveConfig;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.TabControl tbOverviewObjectInfo;
+        private System.Windows.Forms.TabPage tpCreatureObject;
+        private System.Windows.Forms.TextBox txtCreaturePositionY;
+        private System.Windows.Forms.Label lblCreaturePositionY;
+        private System.Windows.Forms.TextBox txtCreatureZoneName;
+        private System.Windows.Forms.TextBox txtCreatureZoneId;
+        private System.Windows.Forms.Label lblCreatureZone;
+        private System.Windows.Forms.TabPage tpCreatureTemplate;
+        private System.Windows.Forms.TabPage tpGameObject;
+        private System.Windows.Forms.TabPage tpGameObjectTemplate;
+        private System.Windows.Forms.TextBox txtCreaturePositionX;
+        private System.Windows.Forms.Label lblCreaturePositionX;
+        private System.Windows.Forms.TextBox txtCreatureMapName;
+        private System.Windows.Forms.TextBox txtCreatureMapId;
+        private System.Windows.Forms.Label lblCreatureMap;
+        private System.Windows.Forms.TextBox txtCreaturePositionZ;
+        private System.Windows.Forms.Label lblCreaturePositionZ;
+        private System.Windows.Forms.TextBox txtCreatureAreaName;
+        private System.Windows.Forms.TextBox txtCreatureAreaId;
+        private System.Windows.Forms.Label lblCreatureArea;
+        private System.Windows.Forms.TextBox txtCreatureEntry;
+        private System.Windows.Forms.TextBox txtCreatureId;
+        private System.Windows.Forms.Label lblCreatureIdEntry;
     }
 }
 

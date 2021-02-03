@@ -5,11 +5,14 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DBFileReaderLib;
 using MySql.Data.MySqlClient;
+using Renci.SshNet.Security;
 using Trinity.PoolManagerData;
 
 namespace Trinity.PoolManager
@@ -29,6 +32,15 @@ namespace Trinity.PoolManager
 
         private void InitializeLocal()
         {
+            tbOverviewObjectInfo.Appearance = TabAppearance.FlatButtons;
+            tbOverviewObjectInfo.ItemSize = new Size(0, 1);
+            tbOverviewObjectInfo.SizeMode = TabSizeMode.Fixed;
+
+            // Disable other panels except config 
+            foreach (var page in tbMain.TabPages.Cast<TabPage>())
+                if (page != tpConfig)
+                    page.Enabled = false;
+
             config = new PoolManagerConfig();
             var configState = config.ValidateConfig(true);
             if (configState != null)
@@ -38,6 +50,12 @@ namespace Trinity.PoolManager
                 MessageBox.Show($"Unable to load configuration{Environment.NewLine}{configState}{Environment.NewLine}Please correct configuration and save");
                 return;
             }
+
+            // Enable panels now config is loaded
+            foreach (var page in tbMain.TabPages.Cast<TabPage>())
+                if (page != tpConfig)
+                    page.Enabled = true;
+
 
             // Maybe it will actually run destructor
             if (data != null)
@@ -105,45 +123,57 @@ namespace Trinity.PoolManager
             (
                 from row in objectData.Values.Select(row => row.dbcMap).Distinct().OrderBy(row => row.Id)
                 select new
-                    TreeNode(row.ToString())
+                    TrinityTreeNode(row.ToString())
+                    {
+                        TrinityMap = row
+                    }
             ).ToArray();
             rootNode.Nodes.AddRange(mapNodes);
 
             // Probably a better way to go about this
-            foreach (var mapNode in rootNode.Nodes.Cast<TreeNode>())
+            foreach (var mapNode in rootNode.Nodes.Cast<TrinityTreeNode>())
             {
-                var mapId = Convert.ToUInt32(mapNode.Text.Split(':')[0]);
+                var mapId = (uint)mapNode.TrinityMap.Id;
                 // Add distinct zones per map
                 var zoneNodes =
                 (
                     from row in objectData.Values.Where(row => row.map.Equals(mapId) && row.dbcZone != null)
                         .Select(row => row.dbcZone).Distinct().OrderBy(row => row.ID)
                     select new
-                        TreeNode(row.ToString())
+                        TrinityTreeNode(row.ToString())
+                        {
+                            TrinityZone = row
+                        }
                 ).ToArray();
                 mapNode.Nodes.AddRange(zoneNodes);
 
                 foreach (var zoneNode in zoneNodes)
                 {
                     // Distinct object templates
-                    var zoneId = Convert.ToUInt32(zoneNode.Text.Split(':')[0]);
+                    var zoneId = (uint)zoneNode.TrinityZone.ID;
                     var objectTemplateNodes =
                     (
                         from row in objectData.Values.Where(row => row.zoneId.Equals(zoneId))
                             .Select(row => row.trinityTemplateObject).Distinct().OrderBy(row => row.entry)
                         select new
-                            TreeNode(row.ToString())
+                            TrinityTreeNode(row.ToString())
+                            {
+                                TrinityTemplate = row
+                            }
                     ).ToArray();
                     zoneNode.Nodes.AddRange(objectTemplateNodes);
 
                     foreach (var templateNode in objectTemplateNodes)
                     {
                         // Add objects for each template
-                        var entryId = Convert.ToUInt32(templateNode.Text.Split(':')[0]);
+                        var entryId = templateNode.TrinityTemplate.entry;
                         var template = templateData[entryId];
                         var objectNodes = (
                             from row in template.objects.Where(row => row.zoneId.Equals(zoneId))
-                            select new TreeNode(row.ToString())
+                            select new TrinityTreeNode(row.ToString())
+                            {
+                                TrinityObject = row
+                            }
                         ).ToArray();
                         templateNode.Nodes.AddRange(objectNodes);
                         updated += objectNodes.Length;
@@ -272,5 +302,63 @@ namespace Trinity.PoolManager
             txtTrinityDBCFolder.Text = configData.DbcFolder;
         }
 
+        private void tvOverview_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            try
+            {
+                var trinityNode = (TrinityTreeNode) e.Node;
+                if (trinityNode.IsTrinityObject)
+                {
+                    tbOverviewObjectInfo.Visible = true;
+                    if (trinityNode.TrinityObject.type == ObjectType.OBJECT_CREATURE)
+                        setVisibleTab(tbOverviewObjectInfo, tpCreatureObject);
+                    else
+                        setVisibleTab(tbOverviewObjectInfo, tpGameObject);
+                }
+                else if (trinityNode.IsTrinityTemplate)
+                {
+                    tbOverviewObjectInfo.Visible = true;
+                    if (trinityNode.TrinityTemplate.objectType == ObjectType.OBJECT_CREATURE)
+                        setVisibleTab(tbOverviewObjectInfo, tpCreatureTemplate);
+                    else
+                        setVisibleTab(tbOverviewObjectInfo, tpGameObjectTemplate);
+                }
+                else
+                {
+                    tbOverviewObjectInfo.Visible = false;
+                }
+                updateObjectInfo(trinityNode);
+            }
+            catch { }
+
+        }
+
+        private void setVisibleTab(TabControl tabControl, TabPage selectedPage)
+        {
+            foreach (var page in tabControl.TabPages)
+            {
+                if (page.Equals(selectedPage))
+                    tabControl.SelectTab(selectedPage);
+            }
+        }
+
+        private void updateObjectInfo(TrinityTreeNode node)
+        {
+            if (node.IsTrinityObject && node.TrinityObject.type == ObjectType.OBJECT_CREATURE)
+            {
+                var trinObject = node.TrinityObject;
+                txtCreatureMapId.Text = trinObject.dbcMap.Id.ToString();
+                txtCreatureMapName.Text = trinObject.dbcMap.MapName_Lang;
+                txtCreatureZoneId.Text = trinObject.dbcZone.ID.ToString();
+                txtCreatureZoneName.Text = trinObject.dbcZone.AreaName_Lang;
+                txtCreatureAreaId.Text = trinObject.dbcArea.ID.ToString();
+                txtCreatureAreaName.Text = trinObject.dbcArea.AreaName_Lang;
+                txtCreaturePositionX.Text = trinObject.positionX.ToString("0.00000000");
+                txtCreaturePositionY.Text = trinObject.positionY.ToString("0.00000000");
+                txtCreaturePositionZ.Text = trinObject.positionZ.ToString("0.00000000");
+                txtCreatureId.Text = trinObject.guid.ToString();
+                txtCreatureEntry.Text = trinObject.id.ToString();
+            }
+        }
     }
 }
