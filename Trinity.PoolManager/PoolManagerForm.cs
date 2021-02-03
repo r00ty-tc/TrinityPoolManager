@@ -35,6 +35,7 @@ namespace Trinity.PoolManager
             tbOverviewObjectInfo.Appearance = TabAppearance.FlatButtons;
             tbOverviewObjectInfo.ItemSize = new Size(0, 1);
             tbOverviewObjectInfo.SizeMode = TabSizeMode.Fixed;
+            tbOverviewObjectInfo.Visible = false;
 
             // Disable other panels except config 
             foreach (var page in tbMain.TabPages.Cast<TabPage>())
@@ -356,9 +357,35 @@ namespace Trinity.PoolManager
                 txtCreaturePositionX.Text = trinObject.positionX.ToString("0.00000000");
                 txtCreaturePositionY.Text = trinObject.positionY.ToString("0.00000000");
                 txtCreaturePositionZ.Text = trinObject.positionZ.ToString("0.00000000");
+                txtCreatureOrientation.Text = trinObject.orientation.ToString("0.00000000");
                 txtCreatureId.Text = trinObject.guid.ToString();
                 txtCreatureEntry.Text = trinObject.id.ToString();
+                txtCreatureName.Text = trinObject.trinityTemplateObject.name;       // Technically doesn't belong on this tab, but whatever.
+                txtCreaturePhaseMask.Text = trinObject.phaseMask.ToString();
+                txtCreatureSpawnMask.Text = trinObject.spawnMask.ToString();
+                txtCreatureRespawnTime.Text = trinObject.spawntimeSecs.ToString();
             }
+            else if (node.IsTrinityObject && node.TrinityObject.type == ObjectType.OBJECT_GAMEOBJECT)
+            {
+                var trinObject = node.TrinityObject;
+                txtGameObjectMapId.Text = trinObject.dbcMap.Id.ToString();
+                txtGameObjectMapName.Text = trinObject.dbcMap.MapName_Lang;
+                txtGameObjectZoneId.Text = trinObject.dbcZone.ID.ToString();
+                txtGameObjectZoneName.Text = trinObject.dbcZone.AreaName_Lang;
+                txtGameObjectAreaId.Text = trinObject.dbcArea.ID.ToString();
+                txtGameObjectAreaName.Text = trinObject.dbcArea.AreaName_Lang;
+                txtGameObjectPositionX.Text = trinObject.positionX.ToString("0.00000000");
+                txtGameObjectPositionY.Text = trinObject.positionY.ToString("0.00000000");
+                txtGameObjectPositionZ.Text = trinObject.positionZ.ToString("0.00000000");
+                txtGameObjectOrientation.Text = trinObject.orientation.ToString("0.00000000");
+                txtGameObjectId.Text = trinObject.guid.ToString();
+                txtGameObjectEntry.Text = trinObject.id.ToString();
+                txtGameObjectName.Text = trinObject.trinityTemplateObject.name;       // Technically doesn't belong on this tab, but whatever.
+                txtGameObjectPhaseMask.Text = trinObject.phaseMask.ToString();
+                txtGameObjectSpawnMask.Text = trinObject.spawnMask.ToString();
+                txtGameObjectRespawnTime.Text = trinObject.spawntimeSecs.ToString();
+            }
+
         }
     }
 }
