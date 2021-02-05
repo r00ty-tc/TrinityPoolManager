@@ -137,8 +137,7 @@ namespace Trinity.PoolDB
             // Load DBC files
             dbcMap = new Storage<MapEntry>($"{configData.DbcFolder}Map.dbc");
             dbcArea = new Storage<AreaTableEntry>($"{configData.DbcFolder}AreaTable.dbc");
-            dbcZone = dbcArea.Where(row => row.Value.ParentAreaID == 0).
-                ToDictionary(row => row.Key, row => row.Value);
+            dbcZone = dbcArea.Where(row => row.Value.ParentAreaID == 0).ToDictionary(row => row.Key, row => row.Value);
 
             // Load all data into internal structures
             currentStatus.maxItems = getTotalRows();
@@ -149,6 +148,9 @@ namespace Trinity.PoolDB
             loadPools();
             UpdateStatus($"Loading complete", 1, 1);
         }
+
+        public bool IsLoaded => (dbcMap != null && dbcZone != null && dbcArea != null && creatureTemplateData != null &&
+                                 creatureData != null && gameObjectData != null && gameObjectTemplateData != null);
 
         private uint getRowsInTable(string table, MySqlConnection connect)
         {

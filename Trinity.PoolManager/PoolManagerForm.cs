@@ -35,6 +35,7 @@ namespace Trinity.PoolManager
             tbOverviewObjectInfo.Appearance = TabAppearance.FlatButtons;
             tbOverviewObjectInfo.ItemSize = new Size(0, 1);
             tbOverviewObjectInfo.SizeMode = TabSizeMode.Fixed;
+            tbOverviewObjectInfo.Visible = false;
 
             // Disable other panels except config 
             foreach (var page in tbMain.TabPages.Cast<TabPage>())
@@ -42,6 +43,7 @@ namespace Trinity.PoolManager
                     page.Enabled = false;
 
             config = new PoolManagerConfig();
+
             var configState = config.ValidateConfig(true);
             if (configState != null)
             {
@@ -62,6 +64,11 @@ namespace Trinity.PoolManager
                 data = null;
 
             data = new PoolDB(config.Data);
+            if (!data.IsLoaded)
+            {
+                tpPoolConversion.Enabled = false;
+                tpPoolDesigner.Enabled = false;
+            }
 
             // Set config to form
             txtSqlServerHost.Text = config.Data.SqlServerHost;
@@ -91,6 +98,10 @@ namespace Trinity.PoolManager
 
             // Make sure the task is completed
             task.Join();
+
+            if (!data.IsLoaded)
+                return;
+
             updateStatusDB();
             //updateTreeView();
             btnLoad.Enabled = true;
@@ -112,6 +123,8 @@ namespace Trinity.PoolManager
             tvOverview.EndUpdate();
             tvOverview.ResumeLayout();
 
+            tpPoolConversion.Enabled = true;
+            tpPoolDesigner.Enabled = true;
         }
 
         private void updateTreeviewObjects(TreeNode rootNode, SortedDictionary<uint, TrinityObject> objectData,
