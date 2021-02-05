@@ -34,21 +34,11 @@ namespace Trinity.PoolManager
             this.pgStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.tbMain = new System.Windows.Forms.TabControl();
             this.tpOverview = new System.Windows.Forms.TabPage();
-            this.spOverviewContainer = new System.Windows.Forms.SplitContainer();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnLoad = new System.Windows.Forms.Button();
             this.tvOverview = new System.Windows.Forms.TreeView();
             this.tbOverviewObjectInfo = new System.Windows.Forms.TabControl();
             this.tpCreatureObject = new System.Windows.Forms.TabPage();
-            this.txtCreatureRespawnTime = new System.Windows.Forms.TextBox();
-            this.lblCreatureRespawnTime = new System.Windows.Forms.Label();
-            this.txtCreaturePhaseMask = new System.Windows.Forms.TextBox();
-            this.lblCreaturePhaseMask = new System.Windows.Forms.Label();
-            this.txtCreatureSpawnMask = new System.Windows.Forms.TextBox();
-            this.lblCreatureSpawnMask = new System.Windows.Forms.Label();
-            this.txtCreatureOrientation = new System.Windows.Forms.TextBox();
-            this.lblCreatureOrientation = new System.Windows.Forms.Label();
-            this.txtCreatureName = new System.Windows.Forms.TextBox();
-            this.lblCreatureName = new System.Windows.Forms.Label();
             this.txtCreatureEntry = new System.Windows.Forms.TextBox();
             this.txtCreatureId = new System.Windows.Forms.TextBox();
             this.lblCreatureIdEntry = new System.Windows.Forms.Label();
@@ -89,25 +79,18 @@ namespace Trinity.PoolManager
             this.txtSqlUsername = new System.Windows.Forms.TextBox();
             this.txtSqlServerHost = new System.Windows.Forms.TextBox();
             this.lblSqlServerHost = new System.Windows.Forms.Label();
-            this.spPoolConvert = new System.Windows.Forms.SplitContainer();
-            this.button1 = new System.Windows.Forms.Button();
-            this.treeView1 = new System.Windows.Forms.TreeView();
             this.ssStatus.SuspendLayout();
             this.tbMain.SuspendLayout();
             this.tpOverview.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.spOverviewContainer)).BeginInit();
-            this.spOverviewContainer.Panel1.SuspendLayout();
-            this.spOverviewContainer.Panel2.SuspendLayout();
-            this.spOverviewContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.tbOverviewObjectInfo.SuspendLayout();
             this.tpCreatureObject.SuspendLayout();
-            this.tpPoolConversion.SuspendLayout();
             this.tpConfig.SuspendLayout();
             this.grpDBCLocationConfig.SuspendLayout();
             this.grpSqlConfig.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.spPoolConvert)).BeginInit();
-            this.spPoolConvert.Panel1.SuspendLayout();
-            this.spPoolConvert.SuspendLayout();
             this.SuspendLayout();
             // 
             // ssStatus
@@ -151,7 +134,7 @@ namespace Trinity.PoolManager
             // 
             // tpOverview
             // 
-            this.tpOverview.Controls.Add(this.spOverviewContainer);
+            this.tpOverview.Controls.Add(this.splitContainer1);
             this.tpOverview.Location = new System.Drawing.Point(4, 24);
             this.tpOverview.Name = "tpOverview";
             this.tpOverview.Padding = new System.Windows.Forms.Padding(3);
@@ -160,27 +143,27 @@ namespace Trinity.PoolManager
             this.tpOverview.Text = "Overview";
             this.tpOverview.UseVisualStyleBackColor = true;
             // 
-            // spOverviewContainer
+            // splitContainer1
             // 
-            this.spOverviewContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spOverviewContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.spOverviewContainer.Location = new System.Drawing.Point(3, 3);
-            this.spOverviewContainer.Name = "spOverviewContainer";
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
             // 
-            // spOverviewContainer.Panel1
+            // splitContainer1.Panel1
             // 
-            this.spOverviewContainer.Panel1.Controls.Add(this.btnLoad);
-            this.spOverviewContainer.Panel1.Controls.Add(this.tvOverview);
-            this.spOverviewContainer.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.splitContainer1.Panel1.Controls.Add(this.btnLoad);
+            this.splitContainer1.Panel1.Controls.Add(this.tvOverview);
+            this.splitContainer1.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             // 
-            // spOverviewContainer.Panel2
+            // splitContainer1.Panel2
             // 
-            this.spOverviewContainer.Panel2.Controls.Add(this.tbOverviewObjectInfo);
-            this.spOverviewContainer.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.spOverviewContainer.Size = new System.Drawing.Size(786, 394);
-            this.spOverviewContainer.SplitterDistance = 200;
-            this.spOverviewContainer.SplitterWidth = 2;
-            this.spOverviewContainer.TabIndex = 10;
+            this.splitContainer1.Panel2.Controls.Add(this.tbOverviewObjectInfo);
+            this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.splitContainer1.Size = new System.Drawing.Size(786, 394);
+            this.splitContainer1.SplitterDistance = 202;
+            this.splitContainer1.SplitterWidth = 2;
+            this.splitContainer1.TabIndex = 10;
             // 
             // btnLoad
             // 
@@ -188,7 +171,7 @@ namespace Trinity.PoolManager
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLoad.Location = new System.Drawing.Point(3, 363);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(194, 28);
+            this.btnLoad.Size = new System.Drawing.Size(196, 28);
             this.btnLoad.TabIndex = 11;
             this.btnLoad.Text = "Load Data";
             this.btnLoad.UseVisualStyleBackColor = true;
@@ -201,7 +184,7 @@ namespace Trinity.PoolManager
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tvOverview.Location = new System.Drawing.Point(3, 3);
             this.tvOverview.Name = "tvOverview";
-            this.tvOverview.Size = new System.Drawing.Size(194, 354);
+            this.tvOverview.Size = new System.Drawing.Size(196, 354);
             this.tvOverview.TabIndex = 10;
             this.tvOverview.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvOverview_AfterSelect);
             // 
@@ -216,21 +199,11 @@ namespace Trinity.PoolManager
             this.tbOverviewObjectInfo.Location = new System.Drawing.Point(0, 0);
             this.tbOverviewObjectInfo.Name = "tbOverviewObjectInfo";
             this.tbOverviewObjectInfo.SelectedIndex = 0;
-            this.tbOverviewObjectInfo.Size = new System.Drawing.Size(584, 394);
+            this.tbOverviewObjectInfo.Size = new System.Drawing.Size(582, 394);
             this.tbOverviewObjectInfo.TabIndex = 0;
             // 
             // tpCreatureObject
             // 
-            this.tpCreatureObject.Controls.Add(this.txtCreatureRespawnTime);
-            this.tpCreatureObject.Controls.Add(this.lblCreatureRespawnTime);
-            this.tpCreatureObject.Controls.Add(this.txtCreaturePhaseMask);
-            this.tpCreatureObject.Controls.Add(this.lblCreaturePhaseMask);
-            this.tpCreatureObject.Controls.Add(this.txtCreatureSpawnMask);
-            this.tpCreatureObject.Controls.Add(this.lblCreatureSpawnMask);
-            this.tpCreatureObject.Controls.Add(this.txtCreatureOrientation);
-            this.tpCreatureObject.Controls.Add(this.lblCreatureOrientation);
-            this.tpCreatureObject.Controls.Add(this.txtCreatureName);
-            this.tpCreatureObject.Controls.Add(this.lblCreatureName);
             this.tpCreatureObject.Controls.Add(this.txtCreatureEntry);
             this.tpCreatureObject.Controls.Add(this.txtCreatureId);
             this.tpCreatureObject.Controls.Add(this.lblCreatureIdEntry);
@@ -252,98 +225,10 @@ namespace Trinity.PoolManager
             this.tpCreatureObject.Location = new System.Drawing.Point(4, 24);
             this.tpCreatureObject.Name = "tpCreatureObject";
             this.tpCreatureObject.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCreatureObject.Size = new System.Drawing.Size(576, 366);
+            this.tpCreatureObject.Size = new System.Drawing.Size(574, 366);
             this.tpCreatureObject.TabIndex = 0;
             this.tpCreatureObject.Text = "Creature";
             this.tpCreatureObject.UseVisualStyleBackColor = true;
-            // 
-            // txtCreatureRespawnTime
-            // 
-            this.txtCreatureRespawnTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCreatureRespawnTime.Location = new System.Drawing.Point(473, 131);
-            this.txtCreatureRespawnTime.Name = "txtCreatureRespawnTime";
-            this.txtCreatureRespawnTime.Size = new System.Drawing.Size(100, 23);
-            this.txtCreatureRespawnTime.TabIndex = 27;
-            // 
-            // lblCreatureRespawnTime
-            // 
-            this.lblCreatureRespawnTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCreatureRespawnTime.AutoSize = true;
-            this.lblCreatureRespawnTime.Location = new System.Drawing.Point(384, 134);
-            this.lblCreatureRespawnTime.Name = "lblCreatureRespawnTime";
-            this.lblCreatureRespawnTime.Size = new System.Drawing.Size(83, 15);
-            this.lblCreatureRespawnTime.TabIndex = 26;
-            this.lblCreatureRespawnTime.Text = "Respawn Time";
-            // 
-            // txtCreaturePhaseMask
-            // 
-            this.txtCreaturePhaseMask.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCreaturePhaseMask.Location = new System.Drawing.Point(272, 131);
-            this.txtCreaturePhaseMask.Name = "txtCreaturePhaseMask";
-            this.txtCreaturePhaseMask.Size = new System.Drawing.Size(102, 23);
-            this.txtCreaturePhaseMask.TabIndex = 25;
-            // 
-            // lblCreaturePhaseMask
-            // 
-            this.lblCreaturePhaseMask.AutoSize = true;
-            this.lblCreaturePhaseMask.Location = new System.Drawing.Point(196, 134);
-            this.lblCreaturePhaseMask.Name = "lblCreaturePhaseMask";
-            this.lblCreaturePhaseMask.Size = new System.Drawing.Size(69, 15);
-            this.lblCreaturePhaseMask.TabIndex = 24;
-            this.lblCreaturePhaseMask.Text = "Phase Mask";
-            // 
-            // txtCreatureSpawnMask
-            // 
-            this.txtCreatureSpawnMask.Location = new System.Drawing.Point(86, 131);
-            this.txtCreatureSpawnMask.Name = "txtCreatureSpawnMask";
-            this.txtCreatureSpawnMask.Size = new System.Drawing.Size(100, 23);
-            this.txtCreatureSpawnMask.TabIndex = 23;
-            // 
-            // lblCreatureSpawnMask
-            // 
-            this.lblCreatureSpawnMask.AutoSize = true;
-            this.lblCreatureSpawnMask.Location = new System.Drawing.Point(10, 134);
-            this.lblCreatureSpawnMask.Name = "lblCreatureSpawnMask";
-            this.lblCreatureSpawnMask.Size = new System.Drawing.Size(73, 15);
-            this.lblCreatureSpawnMask.TabIndex = 22;
-            this.lblCreatureSpawnMask.Text = "Spawn Mask";
-            // 
-            // txtCreatureOrientation
-            // 
-            this.txtCreatureOrientation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCreatureOrientation.Location = new System.Drawing.Point(481, 97);
-            this.txtCreatureOrientation.Name = "txtCreatureOrientation";
-            this.txtCreatureOrientation.Size = new System.Drawing.Size(92, 23);
-            this.txtCreatureOrientation.TabIndex = 21;
-            // 
-            // lblCreatureOrientation
-            // 
-            this.lblCreatureOrientation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCreatureOrientation.AutoSize = true;
-            this.lblCreatureOrientation.Location = new System.Drawing.Point(461, 101);
-            this.lblCreatureOrientation.Name = "lblCreatureOrientation";
-            this.lblCreatureOrientation.Size = new System.Drawing.Size(16, 15);
-            this.lblCreatureOrientation.TabIndex = 20;
-            this.lblCreatureOrientation.Text = "O";
-            // 
-            // txtCreatureName
-            // 
-            this.txtCreatureName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCreatureName.Location = new System.Drawing.Point(272, 97);
-            this.txtCreatureName.Name = "txtCreatureName";
-            this.txtCreatureName.Size = new System.Drawing.Size(183, 23);
-            this.txtCreatureName.TabIndex = 19;
-            // 
-            // lblCreatureName
-            // 
-            this.lblCreatureName.AutoSize = true;
-            this.lblCreatureName.Location = new System.Drawing.Point(227, 100);
-            this.lblCreatureName.Name = "lblCreatureName";
-            this.lblCreatureName.Size = new System.Drawing.Size(39, 15);
-            this.lblCreatureName.TabIndex = 18;
-            this.lblCreatureName.Text = "Name";
             // 
             // txtCreatureEntry
             // 
@@ -371,16 +256,16 @@ namespace Trinity.PoolManager
             // txtCreaturePositionZ
             // 
             this.txtCreaturePositionZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCreaturePositionZ.Location = new System.Drawing.Point(481, 68);
+            this.txtCreaturePositionZ.Location = new System.Drawing.Point(451, 68);
             this.txtCreaturePositionZ.Name = "txtCreaturePositionZ";
-            this.txtCreaturePositionZ.Size = new System.Drawing.Size(92, 23);
+            this.txtCreaturePositionZ.Size = new System.Drawing.Size(120, 23);
             this.txtCreaturePositionZ.TabIndex = 14;
             // 
             // lblCreaturePositionZ
             // 
             this.lblCreaturePositionZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCreaturePositionZ.AutoSize = true;
-            this.lblCreaturePositionZ.Location = new System.Drawing.Point(461, 71);
+            this.lblCreaturePositionZ.Location = new System.Drawing.Point(431, 71);
             this.lblCreaturePositionZ.Name = "lblCreaturePositionZ";
             this.lblCreaturePositionZ.Size = new System.Drawing.Size(14, 15);
             this.lblCreaturePositionZ.TabIndex = 13;
@@ -392,7 +277,7 @@ namespace Trinity.PoolManager
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCreatureAreaName.Location = new System.Drawing.Point(146, 68);
             this.txtCreatureAreaName.Name = "txtCreatureAreaName";
-            this.txtCreatureAreaName.Size = new System.Drawing.Size(309, 23);
+            this.txtCreatureAreaName.Size = new System.Drawing.Size(279, 23);
             this.txtCreatureAreaName.TabIndex = 12;
             // 
             // txtCreatureAreaId
@@ -414,16 +299,16 @@ namespace Trinity.PoolManager
             // txtCreaturePositionX
             // 
             this.txtCreaturePositionX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCreaturePositionX.Location = new System.Drawing.Point(481, 10);
+            this.txtCreaturePositionX.Location = new System.Drawing.Point(451, 10);
             this.txtCreaturePositionX.Name = "txtCreaturePositionX";
-            this.txtCreaturePositionX.Size = new System.Drawing.Size(92, 23);
+            this.txtCreaturePositionX.Size = new System.Drawing.Size(120, 23);
             this.txtCreaturePositionX.TabIndex = 9;
             // 
             // lblCreaturePositionX
             // 
             this.lblCreaturePositionX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCreaturePositionX.AutoSize = true;
-            this.lblCreaturePositionX.Location = new System.Drawing.Point(461, 13);
+            this.lblCreaturePositionX.Location = new System.Drawing.Point(431, 13);
             this.lblCreaturePositionX.Name = "lblCreaturePositionX";
             this.lblCreaturePositionX.Size = new System.Drawing.Size(14, 15);
             this.lblCreaturePositionX.TabIndex = 8;
@@ -435,7 +320,7 @@ namespace Trinity.PoolManager
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCreatureMapName.Location = new System.Drawing.Point(146, 10);
             this.txtCreatureMapName.Name = "txtCreatureMapName";
-            this.txtCreatureMapName.Size = new System.Drawing.Size(309, 23);
+            this.txtCreatureMapName.Size = new System.Drawing.Size(279, 23);
             this.txtCreatureMapName.TabIndex = 7;
             // 
             // txtCreatureMapId
@@ -457,16 +342,16 @@ namespace Trinity.PoolManager
             // txtCreaturePositionY
             // 
             this.txtCreaturePositionY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCreaturePositionY.Location = new System.Drawing.Point(481, 39);
+            this.txtCreaturePositionY.Location = new System.Drawing.Point(451, 39);
             this.txtCreaturePositionY.Name = "txtCreaturePositionY";
-            this.txtCreaturePositionY.Size = new System.Drawing.Size(92, 23);
+            this.txtCreaturePositionY.Size = new System.Drawing.Size(120, 23);
             this.txtCreaturePositionY.TabIndex = 4;
             // 
             // lblCreaturePositionY
             // 
             this.lblCreaturePositionY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCreaturePositionY.AutoSize = true;
-            this.lblCreaturePositionY.Location = new System.Drawing.Point(461, 42);
+            this.lblCreaturePositionY.Location = new System.Drawing.Point(431, 42);
             this.lblCreaturePositionY.Name = "lblCreaturePositionY";
             this.lblCreaturePositionY.Size = new System.Drawing.Size(14, 15);
             this.lblCreaturePositionY.TabIndex = 3;
@@ -478,7 +363,7 @@ namespace Trinity.PoolManager
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCreatureZoneName.Location = new System.Drawing.Point(146, 39);
             this.txtCreatureZoneName.Name = "txtCreatureZoneName";
-            this.txtCreatureZoneName.Size = new System.Drawing.Size(309, 23);
+            this.txtCreatureZoneName.Size = new System.Drawing.Size(279, 23);
             this.txtCreatureZoneName.TabIndex = 2;
             // 
             // txtCreatureZoneId
@@ -511,7 +396,6 @@ namespace Trinity.PoolManager
             // 
             this.tpGameObject.Location = new System.Drawing.Point(4, 24);
             this.tpGameObject.Name = "tpGameObject";
-            this.tpGameObject.Padding = new System.Windows.Forms.Padding(3);
             this.tpGameObject.Size = new System.Drawing.Size(574, 366);
             this.tpGameObject.TabIndex = 2;
             this.tpGameObject.Text = "GameObject";
@@ -528,7 +412,6 @@ namespace Trinity.PoolManager
             // 
             // tpPoolConversion
             // 
-            this.tpPoolConversion.Controls.Add(this.spPoolConvert);
             this.tpPoolConversion.Location = new System.Drawing.Point(4, 24);
             this.tpPoolConversion.Name = "tpPoolConversion";
             this.tpPoolConversion.Padding = new System.Windows.Forms.Padding(3);
@@ -723,41 +606,6 @@ namespace Trinity.PoolManager
             this.lblSqlServerHost.TabIndex = 0;
             this.lblSqlServerHost.Text = "SQL Server Host/IP";
             // 
-            // spPoolConvert
-            // 
-            this.spPoolConvert.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spPoolConvert.Location = new System.Drawing.Point(3, 3);
-            this.spPoolConvert.Name = "spPoolConvert";
-            // 
-            // spPoolConvert.Panel1
-            // 
-            this.spPoolConvert.Panel1.Controls.Add(this.button1);
-            this.spPoolConvert.Panel1.Controls.Add(this.treeView1);
-            this.spPoolConvert.Size = new System.Drawing.Size(786, 394);
-            this.spPoolConvert.SplitterDistance = 200;
-            this.spPoolConvert.TabIndex = 0;
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(3, 363);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(194, 28);
-            this.button1.TabIndex = 13;
-            this.button1.Text = "Load Data";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // treeView1
-            // 
-            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeView1.Location = new System.Drawing.Point(3, 3);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(194, 354);
-            this.treeView1.TabIndex = 12;
-            // 
             // PoolManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -771,22 +619,18 @@ namespace Trinity.PoolManager
             this.ssStatus.PerformLayout();
             this.tbMain.ResumeLayout(false);
             this.tpOverview.ResumeLayout(false);
-            this.spOverviewContainer.Panel1.ResumeLayout(false);
-            this.spOverviewContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.spOverviewContainer)).EndInit();
-            this.spOverviewContainer.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.tbOverviewObjectInfo.ResumeLayout(false);
             this.tpCreatureObject.ResumeLayout(false);
             this.tpCreatureObject.PerformLayout();
-            this.tpPoolConversion.ResumeLayout(false);
             this.tpConfig.ResumeLayout(false);
             this.grpDBCLocationConfig.ResumeLayout(false);
             this.grpDBCLocationConfig.PerformLayout();
             this.grpSqlConfig.ResumeLayout(false);
             this.grpSqlConfig.PerformLayout();
-            this.spPoolConvert.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.spPoolConvert)).EndInit();
-            this.spPoolConvert.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -800,7 +644,7 @@ namespace Trinity.PoolManager
         private System.Windows.Forms.TabPage tpOverview;
         private System.Windows.Forms.TabPage tpPoolConversion;
         private System.Windows.Forms.TabPage tpPoolDesigner;
-        private System.Windows.Forms.SplitContainer spOverviewContainer;
+        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.TreeView tvOverview;
         private System.Windows.Forms.TabPage tpConfig;
@@ -843,19 +687,6 @@ namespace Trinity.PoolManager
         private System.Windows.Forms.TextBox txtCreatureEntry;
         private System.Windows.Forms.TextBox txtCreatureId;
         private System.Windows.Forms.Label lblCreatureIdEntry;
-        private System.Windows.Forms.TextBox txtCreatureName;
-        private System.Windows.Forms.Label lblCreatureName;
-        private System.Windows.Forms.TextBox txtCreatureOrientation;
-        private System.Windows.Forms.Label lblCreatureOrientation;
-        private System.Windows.Forms.TextBox txtCreatureRespawnTime;
-        private System.Windows.Forms.Label lblCreatureRespawnTime;
-        private System.Windows.Forms.TextBox txtCreaturePhaseMask;
-        private System.Windows.Forms.Label lblCreaturePhaseMask;
-        private System.Windows.Forms.TextBox txtCreatureSpawnMask;
-        private System.Windows.Forms.Label lblCreatureSpawnMask;
-        private System.Windows.Forms.SplitContainer spPoolConvert;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TreeView treeView1;
     }
 }
 

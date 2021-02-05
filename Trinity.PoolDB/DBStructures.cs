@@ -83,6 +83,13 @@ namespace Trinity.PoolManagerData
         public uint npcFlag;
         public uint unitFlags;
         public uint dynamicFlags;
+        //public CreatureTemplate creatureTemplate;
+
+        /*public Creature()
+        {
+            creatureTemplate = null;
+        }*/
+
     }
 
     public class CreatureTemplate : TrinityObjectTemplate
@@ -133,6 +140,12 @@ namespace Trinity.PoolManagerData
         public float rotation3;
         public uint animProgress;
         public uint state;
+        //public GameObjectTemplate goTemplate;
+
+        /*public GameObject()
+        {
+            goTemplate = null;
+        }*/
     }
 
     public class GameObjectTemplate : TrinityObjectTemplate

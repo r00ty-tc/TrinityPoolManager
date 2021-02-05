@@ -35,7 +35,6 @@ namespace Trinity.PoolManager
             tbOverviewObjectInfo.Appearance = TabAppearance.FlatButtons;
             tbOverviewObjectInfo.ItemSize = new Size(0, 1);
             tbOverviewObjectInfo.SizeMode = TabSizeMode.Fixed;
-            tbOverviewObjectInfo.Visible = false;
 
             // Disable other panels except config 
             foreach (var page in tbMain.TabPages.Cast<TabPage>())
@@ -63,11 +62,6 @@ namespace Trinity.PoolManager
                 data = null;
 
             data = new PoolDB(config.Data);
-            if (!data.IsLoaded)
-            {
-                tpPoolConversion.Enabled = false;
-                tpPoolDesigner.Enabled = false;
-            }
 
             // Set config to form
             txtSqlServerHost.Text = config.Data.SqlServerHost;
@@ -97,11 +91,8 @@ namespace Trinity.PoolManager
 
             // Make sure the task is completed
             task.Join();
-
-            if (!data.IsLoaded)
-                return;
-
             updateStatusDB();
+            //updateTreeView();
             btnLoad.Enabled = true;
 
             tvOverview.SuspendLayout();
@@ -121,8 +112,6 @@ namespace Trinity.PoolManager
             tvOverview.EndUpdate();
             tvOverview.ResumeLayout();
 
-            tpPoolConversion.Enabled = true;     
-            tpPoolDesigner.Enabled = true;
         }
 
         private void updateTreeviewObjects(TreeNode rootNode, SortedDictionary<uint, TrinityObject> objectData,
@@ -367,13 +356,8 @@ namespace Trinity.PoolManager
                 txtCreaturePositionX.Text = trinObject.positionX.ToString("0.00000000");
                 txtCreaturePositionY.Text = trinObject.positionY.ToString("0.00000000");
                 txtCreaturePositionZ.Text = trinObject.positionZ.ToString("0.00000000");
-                txtCreatureOrientation.Text = trinObject.orientation.ToString("0.00000000");
                 txtCreatureId.Text = trinObject.guid.ToString();
                 txtCreatureEntry.Text = trinObject.id.ToString();
-                txtCreatureName.Text = trinObject.trinityTemplateObject.name;       // Technically doesn't belong on this tab, but whatever.
-                txtCreaturePhaseMask.Text = trinObject.phaseMask.ToString();
-                txtCreatureSpawnMask.Text = trinObject.spawnMask.ToString();
-                txtCreatureRespawnTime.Text = trinObject.spawntimeSecs.ToString();
             }
         }
     }

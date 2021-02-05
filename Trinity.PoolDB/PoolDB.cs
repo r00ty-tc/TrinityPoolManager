@@ -150,9 +150,6 @@ namespace Trinity.PoolDB
             UpdateStatus($"Loading complete", 1, 1);
         }
 
-        public bool IsLoaded => (dbcMap != null && dbcZone != null && dbcArea != null && creatureTemplateData != null &&
-                                 creatureData != null && gameObjectData != null && gameObjectTemplateData != null);
-
         private uint getRowsInTable(string table, MySqlConnection connect)
         {
             using var countCmd = new MySqlCommand($"SELECT COUNT(*) FROM `{table}`", connect);
