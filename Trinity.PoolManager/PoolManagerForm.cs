@@ -369,8 +369,10 @@ namespace Trinity.PoolManager
                 txtCreaturePositionX.Text = trinObject.positionX.ToString("0.00000000");
                 txtCreaturePositionY.Text = trinObject.positionY.ToString("0.00000000");
                 txtCreaturePositionZ.Text = trinObject.positionZ.ToString("0.00000000");
+                txtCreatureOrientation.Text = trinObject.orientation.ToString("0.00000000");
                 txtCreatureId.Text = trinObject.guid.ToString();
                 txtCreatureEntry.Text = trinObject.id.ToString();
+                txtCreatureName.Text = trinObject.trinityTemplateObject.name;
             }
         }
     }
