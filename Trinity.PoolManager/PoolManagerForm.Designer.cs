@@ -67,6 +67,28 @@ namespace Trinity.PoolManager
             this.lblCreatureZone = new System.Windows.Forms.Label();
             this.tpCreatureTemplate = new System.Windows.Forms.TabPage();
             this.tpGameObject = new System.Windows.Forms.TabPage();
+            this.pnlGameObjectOverview = new System.Windows.Forms.Panel();
+            this.txtGameObjectOrientation = new System.Windows.Forms.TextBox();
+            this.lblGameObjectOrientation = new System.Windows.Forms.Label();
+            this.txtGameObjectName = new System.Windows.Forms.TextBox();
+            this.txtGameObjectEntry = new System.Windows.Forms.TextBox();
+            this.txtGameObjectId = new System.Windows.Forms.TextBox();
+            this.lblGameObjectIdEntry = new System.Windows.Forms.Label();
+            this.txtGameObjectPositionZ = new System.Windows.Forms.TextBox();
+            this.lblGameObjectPositionZ = new System.Windows.Forms.Label();
+            this.txtGameObjectAreaName = new System.Windows.Forms.TextBox();
+            this.txtGameObjectAreaId = new System.Windows.Forms.TextBox();
+            this.lblGameObjectArea = new System.Windows.Forms.Label();
+            this.txtGameObjectPositionX = new System.Windows.Forms.TextBox();
+            this.lblGameObjectPositionX = new System.Windows.Forms.Label();
+            this.txtGameObjectMapName = new System.Windows.Forms.TextBox();
+            this.txtGameObjectMapId = new System.Windows.Forms.TextBox();
+            this.lblGameObjectMap = new System.Windows.Forms.Label();
+            this.txtGameObjectPositionY = new System.Windows.Forms.TextBox();
+            this.lblGameObjectPositionY = new System.Windows.Forms.Label();
+            this.txtGameObjectZoneName = new System.Windows.Forms.TextBox();
+            this.txtGameObjectZoneId = new System.Windows.Forms.TextBox();
+            this.lblGameObjectZone = new System.Windows.Forms.Label();
             this.tpGameObjectTemplate = new System.Windows.Forms.TabPage();
             this.tpPoolConversion = new System.Windows.Forms.TabPage();
             this.pnlLegacyPool = new System.Windows.Forms.Panel();
@@ -76,6 +98,7 @@ namespace Trinity.PoolManager
             this.tvLegacyPools = new System.Windows.Forms.TreeView();
             this.tpPoolDesigner = new System.Windows.Forms.TabPage();
             this.tpConfig = new System.Windows.Forms.TabPage();
+            this.pnlConfigTab = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSaveConfig = new System.Windows.Forms.Button();
             this.grpDBCLocationConfig = new System.Windows.Forms.GroupBox();
@@ -92,28 +115,6 @@ namespace Trinity.PoolManager
             this.txtSqlUsername = new System.Windows.Forms.TextBox();
             this.txtSqlServerHost = new System.Windows.Forms.TextBox();
             this.lblSqlServerHost = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBox11 = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBox12 = new System.Windows.Forms.TextBox();
-            this.textBox13 = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.ssStatus.SuspendLayout();
             this.pnlMaster.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -129,6 +130,7 @@ namespace Trinity.PoolManager
             this.tpCreatureObject.SuspendLayout();
             this.pnlCreatureOverview.SuspendLayout();
             this.tpGameObject.SuspendLayout();
+            this.pnlGameObjectOverview.SuspendLayout();
             this.tpPoolConversion.SuspendLayout();
             this.pnlLegacyPool.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scPoolConvert)).BeginInit();
@@ -136,9 +138,9 @@ namespace Trinity.PoolManager
             this.scPoolConvert.SuspendLayout();
             this.pnlPoolTreeview.SuspendLayout();
             this.tpConfig.SuspendLayout();
+            this.pnlConfigTab.SuspendLayout();
             this.grpDBCLocationConfig.SuspendLayout();
             this.grpSqlConfig.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // ssStatus
@@ -516,13 +518,221 @@ namespace Trinity.PoolManager
             // 
             // tpGameObject
             // 
-            this.tpGameObject.Controls.Add(this.panel1);
+            this.tpGameObject.Controls.Add(this.pnlGameObjectOverview);
             this.tpGameObject.Location = new System.Drawing.Point(4, 24);
             this.tpGameObject.Name = "tpGameObject";
             this.tpGameObject.Size = new System.Drawing.Size(576, 366);
             this.tpGameObject.TabIndex = 2;
             this.tpGameObject.Text = "GameObject";
             this.tpGameObject.UseVisualStyleBackColor = true;
+            // 
+            // pnlGameObjectOverview
+            // 
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectOrientation);
+            this.pnlGameObjectOverview.Controls.Add(this.lblGameObjectOrientation);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectName);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectEntry);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectId);
+            this.pnlGameObjectOverview.Controls.Add(this.lblGameObjectIdEntry);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectPositionZ);
+            this.pnlGameObjectOverview.Controls.Add(this.lblGameObjectPositionZ);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectAreaName);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectAreaId);
+            this.pnlGameObjectOverview.Controls.Add(this.lblGameObjectArea);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectPositionX);
+            this.pnlGameObjectOverview.Controls.Add(this.lblGameObjectPositionX);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectMapName);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectMapId);
+            this.pnlGameObjectOverview.Controls.Add(this.lblGameObjectMap);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectPositionY);
+            this.pnlGameObjectOverview.Controls.Add(this.lblGameObjectPositionY);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectZoneName);
+            this.pnlGameObjectOverview.Controls.Add(this.txtGameObjectZoneId);
+            this.pnlGameObjectOverview.Controls.Add(this.lblGameObjectZone);
+            this.pnlGameObjectOverview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlGameObjectOverview.Location = new System.Drawing.Point(0, 0);
+            this.pnlGameObjectOverview.Name = "pnlGameObjectOverview";
+            this.pnlGameObjectOverview.Size = new System.Drawing.Size(576, 366);
+            this.pnlGameObjectOverview.TabIndex = 0;
+            // 
+            // txtGameObjectOrientation
+            // 
+            this.txtGameObjectOrientation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGameObjectOrientation.Location = new System.Drawing.Point(486, 93);
+            this.txtGameObjectOrientation.Name = "txtGameObjectOrientation";
+            this.txtGameObjectOrientation.Size = new System.Drawing.Size(87, 23);
+            this.txtGameObjectOrientation.TabIndex = 38;
+            // 
+            // lblGameObjectOrientation
+            // 
+            this.lblGameObjectOrientation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblGameObjectOrientation.AutoSize = true;
+            this.lblGameObjectOrientation.Location = new System.Drawing.Point(464, 96);
+            this.lblGameObjectOrientation.Name = "lblGameObjectOrientation";
+            this.lblGameObjectOrientation.Size = new System.Drawing.Size(16, 15);
+            this.lblGameObjectOrientation.TabIndex = 37;
+            this.lblGameObjectOrientation.Text = "O";
+            // 
+            // txtGameObjectName
+            // 
+            this.txtGameObjectName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGameObjectName.Location = new System.Drawing.Point(228, 93);
+            this.txtGameObjectName.Name = "txtGameObjectName";
+            this.txtGameObjectName.Size = new System.Drawing.Size(230, 23);
+            this.txtGameObjectName.TabIndex = 36;
+            // 
+            // txtGameObjectEntry
+            // 
+            this.txtGameObjectEntry.Location = new System.Drawing.Point(148, 93);
+            this.txtGameObjectEntry.Name = "txtGameObjectEntry";
+            this.txtGameObjectEntry.Size = new System.Drawing.Size(74, 23);
+            this.txtGameObjectEntry.TabIndex = 35;
+            // 
+            // txtGameObjectId
+            // 
+            this.txtGameObjectId.Location = new System.Drawing.Point(68, 93);
+            this.txtGameObjectId.Name = "txtGameObjectId";
+            this.txtGameObjectId.Size = new System.Drawing.Size(74, 23);
+            this.txtGameObjectId.TabIndex = 34;
+            // 
+            // lblGameObjectIdEntry
+            // 
+            this.lblGameObjectIdEntry.AutoSize = true;
+            this.lblGameObjectIdEntry.Location = new System.Drawing.Point(12, 96);
+            this.lblGameObjectIdEntry.Name = "lblGameObjectIdEntry";
+            this.lblGameObjectIdEntry.Size = new System.Drawing.Size(50, 15);
+            this.lblGameObjectIdEntry.TabIndex = 33;
+            this.lblGameObjectIdEntry.Text = "ID/Entry";
+            // 
+            // txtGameObjectPositionZ
+            // 
+            this.txtGameObjectPositionZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGameObjectPositionZ.Location = new System.Drawing.Point(486, 64);
+            this.txtGameObjectPositionZ.Name = "txtGameObjectPositionZ";
+            this.txtGameObjectPositionZ.Size = new System.Drawing.Size(87, 23);
+            this.txtGameObjectPositionZ.TabIndex = 32;
+            // 
+            // lblGameObjectPositionZ
+            // 
+            this.lblGameObjectPositionZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblGameObjectPositionZ.AutoSize = true;
+            this.lblGameObjectPositionZ.Location = new System.Drawing.Point(464, 67);
+            this.lblGameObjectPositionZ.Name = "lblGameObjectPositionZ";
+            this.lblGameObjectPositionZ.Size = new System.Drawing.Size(14, 15);
+            this.lblGameObjectPositionZ.TabIndex = 31;
+            this.lblGameObjectPositionZ.Text = "Z";
+            // 
+            // txtGameObjectAreaName
+            // 
+            this.txtGameObjectAreaName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGameObjectAreaName.Location = new System.Drawing.Point(148, 64);
+            this.txtGameObjectAreaName.Name = "txtGameObjectAreaName";
+            this.txtGameObjectAreaName.Size = new System.Drawing.Size(310, 23);
+            this.txtGameObjectAreaName.TabIndex = 30;
+            // 
+            // txtGameObjectAreaId
+            // 
+            this.txtGameObjectAreaId.Location = new System.Drawing.Point(68, 64);
+            this.txtGameObjectAreaId.Name = "txtGameObjectAreaId";
+            this.txtGameObjectAreaId.Size = new System.Drawing.Size(74, 23);
+            this.txtGameObjectAreaId.TabIndex = 29;
+            // 
+            // lblGameObjectArea
+            // 
+            this.lblGameObjectArea.AutoSize = true;
+            this.lblGameObjectArea.Location = new System.Drawing.Point(12, 67);
+            this.lblGameObjectArea.Name = "lblGameObjectArea";
+            this.lblGameObjectArea.Size = new System.Drawing.Size(31, 15);
+            this.lblGameObjectArea.TabIndex = 28;
+            this.lblGameObjectArea.Text = "Area";
+            // 
+            // txtGameObjectPositionX
+            // 
+            this.txtGameObjectPositionX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGameObjectPositionX.Location = new System.Drawing.Point(486, 6);
+            this.txtGameObjectPositionX.Name = "txtGameObjectPositionX";
+            this.txtGameObjectPositionX.Size = new System.Drawing.Size(87, 23);
+            this.txtGameObjectPositionX.TabIndex = 27;
+            // 
+            // lblGameObjectPositionX
+            // 
+            this.lblGameObjectPositionX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblGameObjectPositionX.AutoSize = true;
+            this.lblGameObjectPositionX.Location = new System.Drawing.Point(464, 9);
+            this.lblGameObjectPositionX.Name = "lblGameObjectPositionX";
+            this.lblGameObjectPositionX.Size = new System.Drawing.Size(14, 15);
+            this.lblGameObjectPositionX.TabIndex = 26;
+            this.lblGameObjectPositionX.Text = "X";
+            // 
+            // txtGameObjectMapName
+            // 
+            this.txtGameObjectMapName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGameObjectMapName.Location = new System.Drawing.Point(148, 6);
+            this.txtGameObjectMapName.Name = "txtGameObjectMapName";
+            this.txtGameObjectMapName.Size = new System.Drawing.Size(310, 23);
+            this.txtGameObjectMapName.TabIndex = 25;
+            // 
+            // txtGameObjectMapId
+            // 
+            this.txtGameObjectMapId.Location = new System.Drawing.Point(68, 6);
+            this.txtGameObjectMapId.Name = "txtGameObjectMapId";
+            this.txtGameObjectMapId.Size = new System.Drawing.Size(74, 23);
+            this.txtGameObjectMapId.TabIndex = 24;
+            // 
+            // lblGameObjectMap
+            // 
+            this.lblGameObjectMap.AutoSize = true;
+            this.lblGameObjectMap.Location = new System.Drawing.Point(12, 9);
+            this.lblGameObjectMap.Name = "lblGameObjectMap";
+            this.lblGameObjectMap.Size = new System.Drawing.Size(31, 15);
+            this.lblGameObjectMap.TabIndex = 23;
+            this.lblGameObjectMap.Text = "Map";
+            // 
+            // txtGameObjectPositionY
+            // 
+            this.txtGameObjectPositionY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGameObjectPositionY.Location = new System.Drawing.Point(486, 35);
+            this.txtGameObjectPositionY.Name = "txtGameObjectPositionY";
+            this.txtGameObjectPositionY.Size = new System.Drawing.Size(87, 23);
+            this.txtGameObjectPositionY.TabIndex = 22;
+            // 
+            // lblGameObjectPositionY
+            // 
+            this.lblGameObjectPositionY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblGameObjectPositionY.AutoSize = true;
+            this.lblGameObjectPositionY.Location = new System.Drawing.Point(464, 38);
+            this.lblGameObjectPositionY.Name = "lblGameObjectPositionY";
+            this.lblGameObjectPositionY.Size = new System.Drawing.Size(14, 15);
+            this.lblGameObjectPositionY.TabIndex = 21;
+            this.lblGameObjectPositionY.Text = "Y";
+            // 
+            // txtGameObjectZoneName
+            // 
+            this.txtGameObjectZoneName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGameObjectZoneName.Location = new System.Drawing.Point(148, 35);
+            this.txtGameObjectZoneName.Name = "txtGameObjectZoneName";
+            this.txtGameObjectZoneName.Size = new System.Drawing.Size(310, 23);
+            this.txtGameObjectZoneName.TabIndex = 20;
+            // 
+            // txtGameObjectZoneId
+            // 
+            this.txtGameObjectZoneId.Location = new System.Drawing.Point(68, 35);
+            this.txtGameObjectZoneId.Name = "txtGameObjectZoneId";
+            this.txtGameObjectZoneId.Size = new System.Drawing.Size(74, 23);
+            this.txtGameObjectZoneId.TabIndex = 19;
+            // 
+            // lblGameObjectZone
+            // 
+            this.lblGameObjectZone.AutoSize = true;
+            this.lblGameObjectZone.Location = new System.Drawing.Point(12, 38);
+            this.lblGameObjectZone.Name = "lblGameObjectZone";
+            this.lblGameObjectZone.Size = new System.Drawing.Size(34, 15);
+            this.lblGameObjectZone.TabIndex = 18;
+            this.lblGameObjectZone.Text = "Zone";
             // 
             // tpGameObjectTemplate
             // 
@@ -586,6 +796,7 @@ namespace Trinity.PoolManager
             this.btnRefreshPools.TabIndex = 15;
             this.btnRefreshPools.Text = "Refresh Pools";
             this.btnRefreshPools.UseVisualStyleBackColor = true;
+            this.btnRefreshPools.Click += new System.EventHandler(this.btnRefreshPools_Click);
             // 
             // tvLegacyPools
             // 
@@ -608,10 +819,7 @@ namespace Trinity.PoolManager
             // 
             // tpConfig
             // 
-            this.tpConfig.Controls.Add(this.btnCancel);
-            this.tpConfig.Controls.Add(this.btnSaveConfig);
-            this.tpConfig.Controls.Add(this.grpDBCLocationConfig);
-            this.tpConfig.Controls.Add(this.grpSqlConfig);
+            this.tpConfig.Controls.Add(this.pnlConfigTab);
             this.tpConfig.Location = new System.Drawing.Point(4, 24);
             this.tpConfig.Name = "tpConfig";
             this.tpConfig.Size = new System.Drawing.Size(792, 400);
@@ -619,25 +827,39 @@ namespace Trinity.PoolManager
             this.tpConfig.Text = "Config";
             this.tpConfig.UseVisualStyleBackColor = true;
             // 
+            // pnlConfigTab
+            // 
+            this.pnlConfigTab.Controls.Add(this.btnCancel);
+            this.pnlConfigTab.Controls.Add(this.btnSaveConfig);
+            this.pnlConfigTab.Controls.Add(this.grpDBCLocationConfig);
+            this.pnlConfigTab.Controls.Add(this.grpSqlConfig);
+            this.pnlConfigTab.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlConfigTab.Location = new System.Drawing.Point(0, 0);
+            this.pnlConfigTab.Name = "pnlConfigTab";
+            this.pnlConfigTab.Size = new System.Drawing.Size(792, 400);
+            this.pnlConfigTab.TabIndex = 0;
+            // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(1197, 674);
+            this.btnCancel.Location = new System.Drawing.Point(600, 374);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(89, 23);
-            this.btnCancel.TabIndex = 3;
+            this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnSaveConfig
             // 
             this.btnSaveConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSaveConfig.Location = new System.Drawing.Point(1292, 674);
+            this.btnSaveConfig.Location = new System.Drawing.Point(695, 374);
             this.btnSaveConfig.Name = "btnSaveConfig";
             this.btnSaveConfig.Size = new System.Drawing.Size(89, 23);
-            this.btnSaveConfig.TabIndex = 2;
+            this.btnSaveConfig.TabIndex = 6;
             this.btnSaveConfig.Text = "Save";
             this.btnSaveConfig.UseVisualStyleBackColor = true;
+            this.btnSaveConfig.Click += new System.EventHandler(this.btnSaveConfig_Click);
             // 
             // grpDBCLocationConfig
             // 
@@ -648,20 +870,21 @@ namespace Trinity.PoolManager
             this.grpDBCLocationConfig.Controls.Add(this.lblTrinityDBCFolder);
             this.grpDBCLocationConfig.Location = new System.Drawing.Point(8, 146);
             this.grpDBCLocationConfig.Name = "grpDBCLocationConfig";
-            this.grpDBCLocationConfig.Size = new System.Drawing.Size(1368, 54);
-            this.grpDBCLocationConfig.TabIndex = 1;
+            this.grpDBCLocationConfig.Size = new System.Drawing.Size(776, 54);
+            this.grpDBCLocationConfig.TabIndex = 5;
             this.grpDBCLocationConfig.TabStop = false;
             this.grpDBCLocationConfig.Text = "DBC Location";
             // 
             // btnDBCBrowse
             // 
             this.btnDBCBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDBCBrowse.Location = new System.Drawing.Point(1820, 16);
+            this.btnDBCBrowse.Location = new System.Drawing.Point(652, 16);
             this.btnDBCBrowse.Name = "btnDBCBrowse";
             this.btnDBCBrowse.Size = new System.Drawing.Size(118, 23);
             this.btnDBCBrowse.TabIndex = 3;
             this.btnDBCBrowse.Text = "Browse";
             this.btnDBCBrowse.UseVisualStyleBackColor = true;
+            this.btnDBCBrowse.Click += new System.EventHandler(this.btnDBCBrowse_Click);
             // 
             // txtTrinityDBCFolder
             // 
@@ -669,7 +892,7 @@ namespace Trinity.PoolManager
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtTrinityDBCFolder.Location = new System.Drawing.Point(130, 16);
             this.txtTrinityDBCFolder.Name = "txtTrinityDBCFolder";
-            this.txtTrinityDBCFolder.Size = new System.Drawing.Size(1684, 23);
+            this.txtTrinityDBCFolder.Size = new System.Drawing.Size(516, 23);
             this.txtTrinityDBCFolder.TabIndex = 2;
             // 
             // lblTrinityDBCFolder
@@ -695,20 +918,21 @@ namespace Trinity.PoolManager
             this.grpSqlConfig.Controls.Add(this.lblSqlServerHost);
             this.grpSqlConfig.Location = new System.Drawing.Point(8, 3);
             this.grpSqlConfig.Name = "grpSqlConfig";
-            this.grpSqlConfig.Size = new System.Drawing.Size(1368, 137);
-            this.grpSqlConfig.TabIndex = 0;
+            this.grpSqlConfig.Size = new System.Drawing.Size(776, 137);
+            this.grpSqlConfig.TabIndex = 4;
             this.grpSqlConfig.TabStop = false;
             this.grpSqlConfig.Text = "SQL Configuration";
             // 
             // btnConnect
             // 
             this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConnect.Location = new System.Drawing.Point(1820, 74);
+            this.btnConnect.Location = new System.Drawing.Point(652, 74);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(118, 23);
             this.btnConnect.TabIndex = 8;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // lblSqlDatabase
             // 
@@ -741,7 +965,7 @@ namespace Trinity.PoolManager
             this.cbSqlDatabase.FormattingEnabled = true;
             this.cbSqlDatabase.Location = new System.Drawing.Point(130, 103);
             this.cbSqlDatabase.Name = "cbSqlDatabase";
-            this.cbSqlDatabase.Size = new System.Drawing.Size(1684, 23);
+            this.cbSqlDatabase.Size = new System.Drawing.Size(516, 23);
             this.cbSqlDatabase.TabIndex = 4;
             // 
             // txtSqlPassword
@@ -750,7 +974,7 @@ namespace Trinity.PoolManager
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSqlPassword.Location = new System.Drawing.Point(130, 74);
             this.txtSqlPassword.Name = "txtSqlPassword";
-            this.txtSqlPassword.Size = new System.Drawing.Size(1684, 23);
+            this.txtSqlPassword.Size = new System.Drawing.Size(516, 23);
             this.txtSqlPassword.TabIndex = 3;
             // 
             // txtSqlUsername
@@ -759,7 +983,7 @@ namespace Trinity.PoolManager
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSqlUsername.Location = new System.Drawing.Point(130, 45);
             this.txtSqlUsername.Name = "txtSqlUsername";
-            this.txtSqlUsername.Size = new System.Drawing.Size(1684, 23);
+            this.txtSqlUsername.Size = new System.Drawing.Size(516, 23);
             this.txtSqlUsername.TabIndex = 2;
             // 
             // txtSqlServerHost
@@ -768,7 +992,7 @@ namespace Trinity.PoolManager
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSqlServerHost.Location = new System.Drawing.Point(130, 16);
             this.txtSqlServerHost.Name = "txtSqlServerHost";
-            this.txtSqlServerHost.Size = new System.Drawing.Size(1684, 23);
+            this.txtSqlServerHost.Size = new System.Drawing.Size(516, 23);
             this.txtSqlServerHost.TabIndex = 1;
             // 
             // lblSqlServerHost
@@ -778,214 +1002,6 @@ namespace Trinity.PoolManager
             this.lblSqlServerHost.Size = new System.Drawing.Size(118, 23);
             this.lblSqlServerHost.TabIndex = 0;
             this.lblSqlServerHost.Text = "SQL Server Host/IP";
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.textBox1);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.textBox2);
-            this.panel1.Controls.Add(this.textBox3);
-            this.panel1.Controls.Add(this.textBox4);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.textBox5);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.textBox6);
-            this.panel1.Controls.Add(this.textBox7);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.textBox8);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.textBox9);
-            this.panel1.Controls.Add(this.textBox10);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.textBox11);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.textBox12);
-            this.panel1.Controls.Add(this.textBox13);
-            this.panel1.Controls.Add(this.label8);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(576, 366);
-            this.panel1.TabIndex = 0;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(486, 93);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(87, 23);
-            this.textBox1.TabIndex = 59;
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(464, 96);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(16, 15);
-            this.label1.TabIndex = 58;
-            this.label1.Text = "O";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(228, 93);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(230, 23);
-            this.textBox2.TabIndex = 57;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(148, 93);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(74, 23);
-            this.textBox3.TabIndex = 56;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(68, 93);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(74, 23);
-            this.textBox4.TabIndex = 55;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 96);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(50, 15);
-            this.label2.TabIndex = 54;
-            this.label2.Text = "ID/Entry";
-            // 
-            // textBox5
-            // 
-            this.textBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox5.Location = new System.Drawing.Point(486, 64);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(87, 23);
-            this.textBox5.TabIndex = 53;
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(464, 67);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(14, 15);
-            this.label3.TabIndex = 52;
-            this.label3.Text = "Z";
-            // 
-            // textBox6
-            // 
-            this.textBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox6.Location = new System.Drawing.Point(148, 64);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(310, 23);
-            this.textBox6.TabIndex = 51;
-            // 
-            // textBox7
-            // 
-            this.textBox7.Location = new System.Drawing.Point(68, 64);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(74, 23);
-            this.textBox7.TabIndex = 50;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 67);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(31, 15);
-            this.label4.TabIndex = 49;
-            this.label4.Text = "Area";
-            // 
-            // textBox8
-            // 
-            this.textBox8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox8.Location = new System.Drawing.Point(486, 6);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(87, 23);
-            this.textBox8.TabIndex = 48;
-            // 
-            // label5
-            // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(464, 9);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(14, 15);
-            this.label5.TabIndex = 47;
-            this.label5.Text = "X";
-            // 
-            // textBox9
-            // 
-            this.textBox9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox9.Location = new System.Drawing.Point(148, 6);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(310, 23);
-            this.textBox9.TabIndex = 46;
-            // 
-            // textBox10
-            // 
-            this.textBox10.Location = new System.Drawing.Point(68, 6);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(74, 23);
-            this.textBox10.TabIndex = 45;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 9);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(31, 15);
-            this.label6.TabIndex = 44;
-            this.label6.Text = "Map";
-            // 
-            // textBox11
-            // 
-            this.textBox11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox11.Location = new System.Drawing.Point(486, 35);
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(87, 23);
-            this.textBox11.TabIndex = 43;
-            // 
-            // label7
-            // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(464, 38);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(14, 15);
-            this.label7.TabIndex = 42;
-            this.label7.Text = "Y";
-            // 
-            // textBox12
-            // 
-            this.textBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox12.Location = new System.Drawing.Point(148, 35);
-            this.textBox12.Name = "textBox12";
-            this.textBox12.Size = new System.Drawing.Size(310, 23);
-            this.textBox12.TabIndex = 41;
-            // 
-            // textBox13
-            // 
-            this.textBox13.Location = new System.Drawing.Point(68, 35);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(74, 23);
-            this.textBox13.TabIndex = 40;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 38);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(34, 15);
-            this.label8.TabIndex = 39;
-            this.label8.Text = "Zone";
             // 
             // PoolManagerForm
             // 
@@ -1013,6 +1029,8 @@ namespace Trinity.PoolManager
             this.pnlCreatureOverview.ResumeLayout(false);
             this.pnlCreatureOverview.PerformLayout();
             this.tpGameObject.ResumeLayout(false);
+            this.pnlGameObjectOverview.ResumeLayout(false);
+            this.pnlGameObjectOverview.PerformLayout();
             this.tpPoolConversion.ResumeLayout(false);
             this.pnlLegacyPool.ResumeLayout(false);
             this.scPoolConvert.Panel1.ResumeLayout(false);
@@ -1020,12 +1038,11 @@ namespace Trinity.PoolManager
             this.scPoolConvert.ResumeLayout(false);
             this.pnlPoolTreeview.ResumeLayout(false);
             this.tpConfig.ResumeLayout(false);
+            this.pnlConfigTab.ResumeLayout(false);
             this.grpDBCLocationConfig.ResumeLayout(false);
             this.grpDBCLocationConfig.PerformLayout();
             this.grpSqlConfig.ResumeLayout(false);
             this.grpSqlConfig.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1065,12 +1082,43 @@ namespace Trinity.PoolManager
         private System.Windows.Forms.TextBox txtCreatureZoneName;
         private System.Windows.Forms.TextBox txtCreatureZoneId;
         private System.Windows.Forms.Label lblCreatureZone;
+        private System.Windows.Forms.TextBox txtGameObjectEntry;
+        private System.Windows.Forms.TextBox txtGameObjectId;
+        private System.Windows.Forms.Label lblGameObjectIdEntry;
+        private System.Windows.Forms.TextBox txtGameObjectPositionZ;
+        private System.Windows.Forms.Label lblGameObjectPositionZ;
+        private System.Windows.Forms.TextBox txtGameObjectAreaName;
+        private System.Windows.Forms.TextBox txtGameObjectAreaId;
+        private System.Windows.Forms.Label lblGameObjectArea;
+        private System.Windows.Forms.TextBox txtGameObjectPositionX;
+        private System.Windows.Forms.Label lblGameObjectPositionX;
+        private System.Windows.Forms.TextBox txtGameObjectMapName;
+        private System.Windows.Forms.TextBox txtGameObjectMapId;
+        private System.Windows.Forms.Label lblGameObjectMap;
+        private System.Windows.Forms.TextBox txtGameObjectPositionY;
+        private System.Windows.Forms.Label lblGameObjectPositionY;
+        private System.Windows.Forms.TextBox txtGameObjectZoneName;
+        private System.Windows.Forms.TextBox txtGameObjectZoneId;
+        private System.Windows.Forms.Label lblGameObjectZone;
+        private System.Windows.Forms.TextBox txtGameObjectOrientation;
+        private System.Windows.Forms.Label lblGameObjectOrientation;
+        private System.Windows.Forms.TextBox txtGameObjectName;
         private System.Windows.Forms.TabPage tpCreatureTemplate;
         private System.Windows.Forms.TabPage tpGameObject;
         private System.Windows.Forms.TabPage tpGameObjectTemplate;
         private System.Windows.Forms.TabPage tpPoolConversion;
         private System.Windows.Forms.TabPage tpPoolDesigner;
         private System.Windows.Forms.TabPage tpConfig;
+        private System.Windows.Forms.Panel pnlLegacyPool;
+        private System.Windows.Forms.SplitContainer scPoolConvert;
+        private System.Windows.Forms.Panel pnlPoolTreeview;
+        private System.Windows.Forms.Button btnRefreshPools;
+        private System.Windows.Forms.TreeView tvLegacyPools;
+        private System.Windows.Forms.TextBox txtCreatureOrientation;
+        private System.Windows.Forms.Label lblCreatureOrientation;
+        private System.Windows.Forms.TextBox txtCreatureName;
+        private System.Windows.Forms.Panel pnlGameObjectOverview;
+        private System.Windows.Forms.Panel pnlConfigTab;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSaveConfig;
         private System.Windows.Forms.GroupBox grpDBCLocationConfig;
@@ -1087,36 +1135,6 @@ namespace Trinity.PoolManager
         private System.Windows.Forms.TextBox txtSqlUsername;
         private System.Windows.Forms.TextBox txtSqlServerHost;
         private System.Windows.Forms.Label lblSqlServerHost;
-        private System.Windows.Forms.Panel pnlLegacyPool;
-        private System.Windows.Forms.SplitContainer scPoolConvert;
-        private System.Windows.Forms.Panel pnlPoolTreeview;
-        private System.Windows.Forms.Button btnRefreshPools;
-        private System.Windows.Forms.TreeView tvLegacyPools;
-        private System.Windows.Forms.TextBox txtCreatureOrientation;
-        private System.Windows.Forms.Label lblCreatureOrientation;
-        private System.Windows.Forms.TextBox txtCreatureName;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox11;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox12;
-        private System.Windows.Forms.TextBox textBox13;
-        private System.Windows.Forms.Label label8;
     }
 }
 

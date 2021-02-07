@@ -7,7 +7,7 @@ using Trinity.PoolManagerData;
 
 namespace Trinity.PoolManager
 {
-    public class TrinityTreeNode : TreeNode
+    public class TrinityOverviewTreeNode : TreeNode
     {
         public TrinityObject TrinityObject;
         public TrinityObjectTemplate TrinityTemplate;
@@ -15,7 +15,7 @@ namespace Trinity.PoolManager
         public AreaTableEntry TrinityZone;
         public AreaTableEntry TrinityArea;
 
-        public TrinityTreeNode(string text) : base(text)
+        public TrinityOverviewTreeNode(string text) : base(text)
         {
             TrinityObject = null;
             TrinityTemplate = null;
@@ -28,5 +28,21 @@ namespace Trinity.PoolManager
         public bool IsTrinityTemplate => TrinityTemplate != null;
         public bool IsTrinityMap => TrinityMap != null;
         public bool IsTrinityZone => TrinityZone != null;
+    }
+
+    public class TrinityLegacyPoolTreeNode : TreeNode
+    {
+        public LegacyPoolEntry LegacyPool;
+        public MapEntry TrinityMap;
+        public AreaTableEntry TrinityZone;
+        public AreaTableEntry TrinityArea;
+
+        public TrinityLegacyPoolTreeNode(string text) : base(text)
+        {
+            LegacyPool = null;
+            TrinityMap = null;
+            TrinityZone = null;
+            TrinityArea = null;
+        }
     }
 }

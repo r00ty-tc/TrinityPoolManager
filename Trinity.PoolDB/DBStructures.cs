@@ -338,11 +338,17 @@ namespace Trinity.PoolManagerData
         public LegacyPoolEntry rootPool;
         public List<LegacyPoolEntry> childPools;
         public List<LegacyPoolObject> poolItems;
+        public List<MapEntry> poolMaps;
+        public List<AreaTableEntry> poolZones;
 
         public LegacyPoolEntry()
         {
             childPools = new List<LegacyPoolEntry>();
             poolItems = new List<LegacyPoolObject>();
+            poolMaps = new List<MapEntry>();
+            poolZones = new List<AreaTableEntry>();
         }
+
+        public override string ToString() => $"{poolId}: {description} [Max: {maxLimit}]";
     }
 }

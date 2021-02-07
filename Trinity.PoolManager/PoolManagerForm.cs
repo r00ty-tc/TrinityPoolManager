@@ -113,11 +113,11 @@ namespace Trinity.PoolManager
 
             var maxUpdated = data.CreatureData.Count;
             updateLocalStatus("Updating Treeview for Creatures", 0, maxUpdated);
-            updateTreeviewObjects(creatureRoot, data.CreatureData, data.CreatureTemplateData);
+            updateOverviewTreeviewObjects(creatureRoot, data.CreatureData, data.CreatureTemplateData);
 
             maxUpdated = data.GameObjectData.Count;
             updateLocalStatus("Updating Treeview for GameObjects", 0, maxUpdated);
-            updateTreeviewObjects(gameObjectRoot, data.GameObjectData, data.GameObjectTemplateData);
+            updateOverviewTreeviewObjects(gameObjectRoot, data.GameObjectData, data.GameObjectTemplateData);
             updateLocalStatus("Ready", 0, 1);
 
             tvOverview.EndUpdate();
@@ -127,16 +127,17 @@ namespace Trinity.PoolManager
             tpPoolDesigner.Enabled = true;
         }
 
-        private void updateTreeviewObjects(TreeNode rootNode, SortedDictionary<uint, TrinityObject> objectData,
+        private void updateOverviewTreeviewObjects(TreeNode rootNode, SortedDictionary<uint, TrinityObject> objectData,
             SortedDictionary<uint, TrinityObjectTemplate> templateData)
         {
             int updated = 0;
+
             // Add unique maps first
             var mapNodes =
             (
                 from row in objectData.Values.Select(row => row.dbcMap).Distinct().OrderBy(row => row.Id)
                 select new
-                    TrinityTreeNode(row.ToString())
+                    TrinityOverviewTreeNode(row.ToString())
                     {
                         TrinityMap = row
                     }
@@ -144,7 +145,7 @@ namespace Trinity.PoolManager
             rootNode.Nodes.AddRange(mapNodes);
 
             // Probably a better way to go about this
-            foreach (var mapNode in rootNode.Nodes.Cast<TrinityTreeNode>())
+            foreach (var mapNode in rootNode.Nodes.Cast<TrinityOverviewTreeNode>())
             {
                 var mapId = (uint)mapNode.TrinityMap.Id;
                 // Add distinct zones per map
@@ -153,7 +154,7 @@ namespace Trinity.PoolManager
                     from row in objectData.Values.Where(row => row.map.Equals(mapId) && row.dbcZone != null)
                         .Select(row => row.dbcZone).Distinct().OrderBy(row => row.ID)
                     select new
-                        TrinityTreeNode(row.ToString())
+                        TrinityOverviewTreeNode(row.ToString())
                         {
                             TrinityZone = row
                         }
@@ -169,7 +170,7 @@ namespace Trinity.PoolManager
                         from row in objectData.Values.Where(row => row.zoneId.Equals(zoneId))
                             .Select(row => row.trinityTemplateObject).Distinct().OrderBy(row => row.entry)
                         select new
-                            TrinityTreeNode(row.ToString())
+                            TrinityOverviewTreeNode(row.ToString())
                             {
                                 TrinityTemplate = row
                             }
@@ -183,7 +184,7 @@ namespace Trinity.PoolManager
                         var template = templateData[entryId];
                         var objectNodes = (
                             from row in template.objects.Where(row => row.zoneId.Equals(zoneId))
-                            select new TrinityTreeNode(row.ToString())
+                            select new TrinityOverviewTreeNode(row.ToString())
                             {
                                 TrinityObject = row
                             }
@@ -319,7 +320,7 @@ namespace Trinity.PoolManager
         {
             try
             {
-                var trinityNode = (TrinityTreeNode) e.Node;
+                var trinityNode = (TrinityOverviewTreeNode) e.Node;
                 if (trinityNode.IsTrinityObject)
                 {
                     tbOverviewObjectInfo.Visible = true;
@@ -355,11 +356,11 @@ namespace Trinity.PoolManager
             }
         }
 
-        private void updateObjectInfo(TrinityTreeNode node)
+        private void updateObjectInfo(TrinityOverviewTreeNode node)
         {
+            var trinObject = node.TrinityObject;
             if (node.IsTrinityObject && node.TrinityObject.type == ObjectType.OBJECT_CREATURE)
             {
-                var trinObject = node.TrinityObject;
                 txtCreatureMapId.Text = trinObject.dbcMap.Id.ToString();
                 txtCreatureMapName.Text = trinObject.dbcMap.MapName_Lang;
                 txtCreatureZoneId.Text = trinObject.dbcZone.ID.ToString();
@@ -373,6 +374,100 @@ namespace Trinity.PoolManager
                 txtCreatureId.Text = trinObject.guid.ToString();
                 txtCreatureEntry.Text = trinObject.id.ToString();
                 txtCreatureName.Text = trinObject.trinityTemplateObject.name;
+            }
+            else if (node.IsTrinityObject && node.TrinityObject.type == ObjectType.OBJECT_GAMEOBJECT)
+            {
+                txtGameObjectMapId.Text = trinObject.dbcMap.Id.ToString();
+                txtGameObjectMapName.Text = trinObject.dbcMap.MapName_Lang;
+                txtGameObjectZoneId.Text = trinObject.dbcZone.ID.ToString();
+                txtGameObjectZoneName.Text = trinObject.dbcZone.AreaName_Lang;
+                txtGameObjectAreaId.Text = trinObject.dbcArea.ID.ToString();
+                txtGameObjectAreaName.Text = trinObject.dbcArea.AreaName_Lang;
+                txtGameObjectPositionX.Text = trinObject.positionX.ToString("0.00000000");
+                txtGameObjectPositionY.Text = trinObject.positionY.ToString("0.00000000");
+                txtGameObjectPositionZ.Text = trinObject.positionZ.ToString("0.00000000");
+                txtGameObjectOrientation.Text = trinObject.orientation.ToString("0.00000000");
+                txtGameObjectId.Text = trinObject.guid.ToString();
+                txtGameObjectEntry.Text = trinObject.id.ToString();
+                txtGameObjectName.Text = trinObject.trinityTemplateObject.name;       // Technically doesn't belong on this tab, but whatever.
+                //txtGameObjectPhaseMask.Text = trinObject.phaseMask.ToString();
+                //txtGameObjectSpawnMask.Text = trinObject.spawnMask.ToString();
+                //txtGameObjectRespawnTime.Text = trinObject.spawntimeSecs.ToString();
+            }
+        }
+
+        private void btnRefreshPools_Click(object sender, EventArgs e)
+        {
+            tvLegacyPools.SuspendLayout();
+            tvLegacyPools.BeginUpdate();
+            tvLegacyPools.Nodes.Clear();
+            var rootNode = tvLegacyPools.Nodes.Add("Pools");
+            updateLocalStatus("Loading Legacy Pool Treeview", 0,  data.LegacyPoolData.Count);
+            updateLegacyPoolTreeViewObjects(rootNode, data.LegacyPoolData);
+            tvLegacyPools.EndUpdate();
+            tvLegacyPools.ResumeLayout();
+        }
+
+        private void updateLegacyPoolTreeViewObjects(TreeNode rootNode, SortedDictionary<uint, LegacyPoolEntry> poolData)
+        {
+            int updated = 0;
+
+            // Add unique maps first
+            var tempMaps = new List<MapEntry>();
+            foreach (var thisMap in poolData.Values.Select(row => row.poolMaps))
+                tempMaps.AddRange(thisMap);
+
+            var mapNodes =
+            (
+                from row in tempMaps.Distinct().OrderBy(row => row.Id)
+                select new
+                    TrinityLegacyPoolTreeNode(row.ToString())
+                    {
+                        TrinityMap = row
+                    }
+            ).ToArray();
+            rootNode.Nodes.AddRange(mapNodes);
+
+            // Now Unique Zones
+            foreach (var mapNode in rootNode.Nodes.Cast< TrinityLegacyPoolTreeNode>())
+            {
+                var allowedPoolNodes = poolData.Values.Where(row =>
+                    row.poolMaps.Select(row => row.Id).Contains(mapNode.TrinityMap.Id)).Select(row => row.poolZones).Distinct();
+
+                var tempZones = new List<AreaTableEntry>();
+                foreach (var thisZone in allowedPoolNodes)
+                    tempZones.AddRange(thisZone);
+
+                var zoneNodes =
+                (
+                    from row in tempZones.Distinct().OrderBy(row => row.ID)
+                    select new TrinityLegacyPoolTreeNode(row.ToString())
+                    {
+                        TrinityZone = row
+                    }
+                ).ToArray();
+                mapNode.Nodes.AddRange(zoneNodes);
+
+                // Now pools for the zone
+                foreach (var zoneNode in mapNode.Nodes.Cast<TrinityLegacyPoolTreeNode>())
+                {
+                    var poolNodes =
+                    (
+                        from row in poolData.Values.Where(row =>
+                                row.poolMaps.Select(mapRow => mapRow.Id).Contains(mapNode.TrinityMap.Id) &&
+                                row.poolZones.Select(zoneRow => zoneRow.ID).Contains(zoneNode.TrinityZone.ID))
+                            .Distinct()
+                            .OrderBy(row => row.poolId)
+                        select new TrinityLegacyPoolTreeNode(row.ToString())
+                        {
+                            LegacyPool = row
+                        }
+                    ).ToArray();
+                    zoneNode.Nodes.AddRange(poolNodes);
+
+                    // Need some kind of recursion here (although not sure I've seen multi level pools)
+                    // @ToDo: Get to it.
+                }
             }
         }
     }

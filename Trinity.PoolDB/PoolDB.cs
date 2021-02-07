@@ -131,6 +131,7 @@ namespace Trinity.PoolDB
         public SortedDictionary<uint, TrinityObjectTemplate> CreatureTemplateData => creatureTemplateData;
         public SortedDictionary<uint, TrinityObject> GameObjectData => gameObjectData;
         public SortedDictionary<uint, TrinityObjectTemplate> GameObjectTemplateData => gameObjectTemplateData;
+        public SortedDictionary<uint, LegacyPoolEntry> LegacyPoolData => legacyPoolData;
 
         public void LoadData()
         {
@@ -521,8 +522,8 @@ namespace Trinity.PoolDB
                                                 $"Pool {poolEntry.poolId} already contains child pool {childPool.poolId}");
 
                                         childPool.parentPool = poolEntry;
+                                        poolEntry.poolItems.Add(poolObject);
                                         poolEntry.childPools.Add(childPool);
-                                        childPool.poolItems.Add(poolObject);
                                     }
                                     else
                                     {
@@ -571,8 +572,21 @@ namespace Trinity.PoolDB
                     // Otherwise mark all child pools 
                     foreach (var childPool in pool.childPools)
                         markSubPools(childPool, pool);
-                }
 
+                    // Add any distinct maps for this pool
+                    foreach (var map in pool.poolItems.Select(row => row?.trinityObject?.dbcMap).Distinct())
+                    {
+                        if (map != null && !pool.poolMaps.Contains(map))
+                            pool.poolMaps.Add(map);
+                    }
+
+                    // Also add any distinct zones for this pool
+                    foreach (var zone in pool.poolItems.Select(row => row?.trinityObject?.dbcZone).Distinct())
+                    {
+                        if (zone != null && !pool.poolZones.Contains(zone))
+                            pool.poolZones.Add(zone);
+                    }
+                }
             }
 
             foreach (var pool in poolsToDelete)
@@ -583,6 +597,18 @@ namespace Trinity.PoolDB
         {
             // Recursively iterate structure to mark root pool
             pool.rootPool = rootPool;
+            foreach (var map in pool.poolItems.Select(row => row?.trinityObject?.dbcMap).Distinct())
+            {
+                if (map != null && !rootPool.poolMaps.Contains(map))
+                    rootPool.poolMaps.Add(map);
+            }
+
+            foreach (var zone in pool.poolItems.Select(row => row?.trinityObject?.dbcZone).Distinct())
+            {
+                if (zone != null && !rootPool.poolZones.Contains(zone))
+                    rootPool.poolZones.Add(zone);
+            }
+
             foreach (var childPool in pool.childPools)
             {
                 markSubPools(childPool, rootPool);
