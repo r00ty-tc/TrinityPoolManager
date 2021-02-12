@@ -36,6 +36,8 @@ namespace Trinity.PoolManager
         public MapEntry TrinityMap;
         public AreaTableEntry TrinityZone;
         public AreaTableEntry TrinityArea;
+        public TrinityObject TrinityObject;
+        public TrinityObjectTemplate TrinityTemplate;
 
         public TrinityLegacyPoolTreeNode(string text) : base(text)
         {
@@ -43,6 +45,8 @@ namespace Trinity.PoolManager
             TrinityMap = null;
             TrinityZone = null;
             TrinityArea = null;
+            TrinityObject = null;
+            TrinityTemplate = null;
         }
     }
 }

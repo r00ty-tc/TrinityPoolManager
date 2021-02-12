@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using DBFileReaderLib;
-using DBFileReaderLib.Attributes;
+﻿using DBFileReaderLib.Attributes;
 
 namespace Trinity.PoolDB
 {
@@ -59,5 +54,23 @@ namespace Trinity.PoolDB
         public int Lightid;
 
         public override string ToString() => $"{ID}: {AreaName_Lang}";
+    }
+
+    public sealed class WorldMapAreaEntry
+    {
+        [Index(true)]
+        public uint ID;
+        public uint MapID;
+        public uint AreaID;
+        public string AreaName;
+        public float LeftBoundary;
+        public float RightBoundary;
+        public float TopBoundary;
+        public float BottomBoundary;
+        public int DisplayMapId;
+        public int DefaultDungeonFloor;
+        public uint ParentWorldMapId;
+
+        public override string ToString() => $"{AreaID}: {AreaName}";
     }
 }

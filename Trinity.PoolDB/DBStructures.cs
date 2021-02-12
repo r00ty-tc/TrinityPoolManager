@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Trinity.PoolDB;
 
 namespace Trinity.PoolManagerData
@@ -31,6 +27,16 @@ namespace Trinity.PoolManagerData
         public TrinityObjectTemplate trinityTemplateObject;
 
         public override string ToString() => $"{guid} ({dbcArea})";
+
+        public string LegacyPoolString(uint legacyPoolId)
+        {
+            var pool = this.legacyPools.FirstOrDefault(row => row.poolId.Equals(legacyPoolId));
+            if (pool == null)
+                return ToString();
+
+            var poolItem = pool.poolItems.FirstOrDefault(row => row.spawnId.Equals(guid));
+            return poolItem != null ? $"{guid} [Chance: {poolItem.chance} ({dbcArea})" : ToString();
+        }
         public TrinityObject()
         {
             legacyPools = new List<LegacyPoolEntry>();
@@ -69,6 +75,11 @@ namespace Trinity.PoolManagerData
         }
 
         public override string ToString() => $"{entry}: {name}";
+
+        public CreatureTemplate AsCreature() =>
+            objectType == ObjectType.OBJECT_CREATURE ? (CreatureTemplate) this : null;
+        public GameObjectTemplate AsGameObject() =>
+            objectType == ObjectType.OBJECT_CREATURE ? (GameObjectTemplate)this : null;
     }
 
     public class Creature : TrinityObject
@@ -341,6 +352,8 @@ namespace Trinity.PoolManagerData
         public List<MapEntry> poolMaps;
         public List<AreaTableEntry> poolZones;
 
+        public bool IsLeaf => childPools.Count == 0;
+
         public LegacyPoolEntry()
         {
             childPools = new List<LegacyPoolEntry>();
@@ -349,6 +362,17 @@ namespace Trinity.PoolManagerData
             poolZones = new List<AreaTableEntry>();
         }
 
-        public override string ToString() => $"{poolId}: {description} [Max: {maxLimit}]";
+        public override string ToString()
+        {
+            var result = $"{poolId}: {description} [Max: {maxLimit}]";
+            if (parentPool != null)
+            {
+                var myChildPool = parentPool.poolItems.FirstOrDefault(row => row.spawnId == this.poolId);
+                if (myChildPool != null)
+                    result = $"{poolId}: {description} [Max: {maxLimit}, Chance: {myChildPool.chance}]";
+            }
+
+            return result;
+        }
     }
 }

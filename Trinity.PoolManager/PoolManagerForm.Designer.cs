@@ -115,6 +115,8 @@ namespace Trinity.PoolManager
             this.txtSqlUsername = new System.Windows.Forms.TextBox();
             this.txtSqlServerHost = new System.Windows.Forms.TextBox();
             this.lblSqlServerHost = new System.Windows.Forms.Label();
+            this.tpWowhead = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.ssStatus.SuspendLayout();
             this.pnlMaster.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -141,6 +143,7 @@ namespace Trinity.PoolManager
             this.pnlConfigTab.SuspendLayout();
             this.grpDBCLocationConfig.SuspendLayout();
             this.grpSqlConfig.SuspendLayout();
+            this.tpWowhead.SuspendLayout();
             this.SuspendLayout();
             // 
             // ssStatus
@@ -183,6 +186,7 @@ namespace Trinity.PoolManager
             this.tbMain.Controls.Add(this.tpOverview);
             this.tbMain.Controls.Add(this.tpPoolConversion);
             this.tbMain.Controls.Add(this.tpPoolDesigner);
+            this.tbMain.Controls.Add(this.tpWowhead);
             this.tbMain.Controls.Add(this.tpConfig);
             this.tbMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMain.Location = new System.Drawing.Point(0, 0);
@@ -766,6 +770,7 @@ namespace Trinity.PoolManager
             // scPoolConvert
             // 
             this.scPoolConvert.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scPoolConvert.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.scPoolConvert.Location = new System.Drawing.Point(0, 0);
             this.scPoolConvert.Name = "scPoolConvert";
             // 
@@ -1003,6 +1008,24 @@ namespace Trinity.PoolManager
             this.lblSqlServerHost.TabIndex = 0;
             this.lblSqlServerHost.Text = "SQL Server Host/IP";
             // 
+            // tpWowhead
+            // 
+            this.tpWowhead.Controls.Add(this.panel1);
+            this.tpWowhead.Location = new System.Drawing.Point(4, 24);
+            this.tpWowhead.Name = "tpWowhead";
+            this.tpWowhead.Size = new System.Drawing.Size(792, 400);
+            this.tpWowhead.TabIndex = 4;
+            this.tpWowhead.Text = "Wowhead Gatherer";
+            this.tpWowhead.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(792, 400);
+            this.panel1.TabIndex = 0;
+            // 
             // PoolManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1043,6 +1066,7 @@ namespace Trinity.PoolManager
             this.grpDBCLocationConfig.PerformLayout();
             this.grpSqlConfig.ResumeLayout(false);
             this.grpSqlConfig.PerformLayout();
+            this.tpWowhead.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1135,6 +1159,8 @@ namespace Trinity.PoolManager
         private System.Windows.Forms.TextBox txtSqlUsername;
         private System.Windows.Forms.TextBox txtSqlServerHost;
         private System.Windows.Forms.Label lblSqlServerHost;
+        private System.Windows.Forms.TabPage tpWowhead;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

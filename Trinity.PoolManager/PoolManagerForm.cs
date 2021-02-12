@@ -465,10 +465,102 @@ namespace Trinity.PoolManager
                     ).ToArray();
                     zoneNode.Nodes.AddRange(poolNodes);
 
-                    // Need some kind of recursion here (although not sure I've seen multi level pools)
-                    // @ToDo: Get to it.
+                    // We recurse into pool structure, even though I don't believe any more than 1 level is ever used.
+                    foreach (var poolNode in poolNodes)
+                        AddLegacySubNodes(poolNode);
                 }
             }
+        }
+
+        private void AddLegacySubNodes(TrinityLegacyPoolTreeNode currentLevel)
+        {
+            if (currentLevel.LegacyPool.IsLeaf)
+            {
+                // Add any Creature templates
+                var creatureTemplateNodes = currentLevel.LegacyPool.poolItems
+                    .Where(row => row.type == LegacyPoolType.POOLTYPE_CREATURE).Select(objRow => objRow.trinityObject.trinityTemplateObject).Distinct();
+                if (creatureTemplateNodes.Any())
+                {
+                    var creatureNode = new TrinityLegacyPoolTreeNode("Creatures");
+                    currentLevel.Nodes.Add(creatureNode);
+                    var creatureTemplateTreeNodes =
+                    (
+                        from row in creatureTemplateNodes
+                        select new TrinityLegacyPoolTreeNode(row.ToString())
+                        {
+                            TrinityTemplate = row
+                        }
+                    ).ToArray();
+                    creatureNode.Nodes.AddRange(creatureTemplateTreeNodes);
+
+                    // Add creature nodes to templates
+                    foreach (var creatureTemplateNode in creatureTemplateTreeNodes)
+                    {
+                        var creatureNodes = currentLevel.LegacyPool.poolItems
+                            .Where(row => row.type == LegacyPoolType.POOLTYPE_CREATURE && row.trinityObject.id == creatureTemplateNode.TrinityTemplate.entry)
+                            .Select(objRow => objRow.trinityObject).Distinct();
+                        var creatureTreeNodes =
+                        (
+                            from row in creatureNodes
+                            select new TrinityLegacyPoolTreeNode(row.LegacyPoolString(currentLevel.LegacyPool.poolId))
+                            {
+                                TrinityObject = row
+                            }
+                        ).ToArray();
+                        creatureTemplateNode.Nodes.AddRange(creatureTreeNodes);
+                    }
+                }
+
+                // Add any GameObject templates
+                var gameObjectTemplateNodes = currentLevel.LegacyPool.poolItems
+                    .Where(row => row.type == LegacyPoolType.POOLTYPE_GAMEOBJECT).Select(objRow => objRow.trinityObject.trinityTemplateObject).Distinct();
+                if (gameObjectTemplateNodes.Any())
+                {
+                    var gameObjectNode = new TrinityLegacyPoolTreeNode("GameObjects");
+                    currentLevel.Nodes.Add(gameObjectNode);
+                    var gameObjectTemplateTreeNodes =
+                    (
+                        from row in gameObjectTemplateNodes
+                        select new TrinityLegacyPoolTreeNode(row.ToString())
+                        {
+                            TrinityTemplate = row
+                        }
+                    ).ToArray();
+                    gameObjectNode.Nodes.AddRange(gameObjectTemplateTreeNodes);
+
+                    // Add gameobject nodes to templates
+                    foreach (var gameObjectTemplateNode in gameObjectTemplateTreeNodes)
+                    {
+                        var gameObjectNodes = currentLevel.LegacyPool.poolItems
+                            .Where(row => row.type == LegacyPoolType.POOLTYPE_GAMEOBJECT && row.trinityObject.id == gameObjectTemplateNode.TrinityTemplate.entry)
+                            .Select(objRow => objRow.trinityObject).Distinct();
+                        var gameObjectTreeNodes =
+                        (
+                            from row in gameObjectNodes
+                            select new TrinityLegacyPoolTreeNode(row.LegacyPoolString(currentLevel.LegacyPool.poolId))
+                            {
+                                TrinityObject = row
+                            }
+                        ).ToArray();
+                        gameObjectTemplateNode.Nodes.AddRange(gameObjectTreeNodes);
+                    }
+                }
+
+                return;
+            }
+
+            var childNodes =
+            (
+                from row in currentLevel.LegacyPool.childPools
+                select new TrinityLegacyPoolTreeNode(row.ToString())
+                {
+                    LegacyPool = row
+                }
+            ).ToArray();
+            currentLevel.Nodes.AddRange(childNodes);
+
+            foreach (var childNode in childNodes)
+                AddLegacySubNodes(childNode);
         }
     }
 }
