@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using DBFileReaderLib;
 using MySql.Data.MySqlClient;
@@ -65,7 +67,7 @@ namespace Trinity.PoolDB
             ("SearingGorge", "SEARING_GORGE"),
             ("SilvermoonCity", "SILVERMOON"),
             ("Silverpine", "SILVERPINE_FOREST"),
-            ("Stormwind", "STORMWIND"),
+            ("Stormwind", "STORMWIND_CITY"),
             ("Stranglethorn", "STRANGLETHORN_VALE"),
             ("Sunwell", "QUEL_DANAS"),
             ("SwampOfSorrows", "SWAMP_OF_SORROWS"),
@@ -96,6 +98,8 @@ namespace Trinity.PoolDB
             ("ZulDrak", "ZULDRAK"),
         };
 
+        public static readonly int MAX_SEARCH_DISTANCE = 13;    // This equates to 0.2 in zoneXY terms
+
         public static string GetLuaZone(string luaZone) =>
             WowheadZoneLookup.FirstOrDefault(row => row.luaName.Equals(luaZone)).dbcName;
 
@@ -114,9 +118,17 @@ namespace Trinity.PoolDB
         private Storage<WorldMapAreaEntry> dbcWMArea;
         private Dictionary<int, AreaTableEntry> dbcZone;
         private Dictionary<uint, WorldMapAreaEntry> dbcWMZoneByID;
+        private WowheadDBStore wowheadStore;
         private ConfigData configData;
 
         private bool poolsLoaded;
+
+        public SortedDictionary<uint, TrinityObject> CreatureData => creatureData;
+        public SortedDictionary<uint, TrinityObjectTemplate> CreatureTemplateData => creatureTemplateData;
+        public SortedDictionary<uint, TrinityObject> GameObjectData => gameObjectData;
+        public SortedDictionary<uint, TrinityObjectTemplate> GameObjectTemplateData => gameObjectTemplateData;
+        public SortedDictionary<uint, LegacyPoolEntry> LegacyPoolData => legacyPoolData;
+        public WowheadDBStore WowheadData => wowheadStore;
 
         public PoolDB(ConfigData config)
         {
@@ -126,6 +138,7 @@ namespace Trinity.PoolDB
             legacyPoolData = null;
             unstructLegacyPoolData = null;
             mapPoolData = null;
+            wowheadStore = null;
             currentStatus = new PoolLoadStatus();
             statusLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
@@ -204,12 +217,6 @@ namespace Trinity.PoolDB
             //statusHandler(this, currentStatus);
         }
 
-        public SortedDictionary<uint, TrinityObject> CreatureData => creatureData;
-        public SortedDictionary<uint, TrinityObjectTemplate> CreatureTemplateData => creatureTemplateData;
-        public SortedDictionary<uint, TrinityObject> GameObjectData => gameObjectData;
-        public SortedDictionary<uint, TrinityObjectTemplate> GameObjectTemplateData => gameObjectTemplateData;
-        public SortedDictionary<uint, LegacyPoolEntry> LegacyPoolData => legacyPoolData;
-
         public void LoadData()
         {
             // Load DBC files
@@ -227,12 +234,72 @@ namespace Trinity.PoolDB
             loadGameObjects();
             loadLegacyPools();
             poolsLoaded = loadPools();
-            
+            // Load wowhead
+            wowheadStore = loadWowhead(configData.WowheadDBFile);
+
             UpdateStatus($"Loading complete", 1, 1);
         }
 
         public bool IsLoaded => (dbcMap != null && dbcZone != null && dbcArea != null && creatureTemplateData != null &&
                                  creatureData != null && gameObjectData != null && gameObjectTemplateData != null);
+
+        private WowheadDBStore loadWowhead(string filename)
+        {
+            var lines = File.ReadAllLines(filename);
+            var mode = 0;   // Search for zone
+            WowheadZoneData currentZone = null;
+            uint currentEntry = 0;
+            var wowhead = new WowheadDBStore();
+            var zoneRegex = new Regex(@"\s*([A-Z_]+)\s\=\ \{");
+            var entryRegex = new Regex(@"\s*\[(\d+)\]\ \=\ \{");
+            var nodeRegex = new Regex(@"\s*([0-9]{5,6},.*)");
+            foreach (var line in lines)
+            {
+                Match zoneMatch = zoneRegex.Match(line);
+                if (zoneMatch.Success && zoneMatch.Groups.Count > 1)
+                {
+                    var zoneName = zoneMatch.Groups[1].Value;
+                    var zone = getDbcZoneByLuaName(zoneName);
+                    var wmzone = dbcWMZoneByID[(uint)zone.ID];
+                    var map = dbcMap[zone.ContinentID];
+                    currentZone = wowhead.AddZone(zone.ID, zone, wmzone, map);
+                }
+                else
+                {
+                    Match entryMatch = entryRegex.Match(line);
+                    if (entryMatch.Success && entryMatch.Groups.Count > 1)
+                    {
+                        currentEntry = Convert.ToUInt32(entryMatch.Groups[1].Value);
+                        if (gameObjectTemplateData.TryGetValue(currentEntry, out var gameObjectTemplate))
+                            currentZone.AddEntry(gameObjectTemplate);
+                        else
+                            currentEntry = 0;
+                    }
+                    else
+                    {
+                        if (currentEntry != 0)
+                        {
+                            Match nodeMatch = nodeRegex.Match(line);
+                            if (nodeMatch.Success && nodeMatch.Groups.Count > 1)
+                            {
+                                bool first = true;
+                                foreach (Group group in nodeMatch.Groups)
+                                {
+                                    if (!first)
+                                        currentZone.AddNodes(currentEntry, group.Value);
+                                    else
+                                        first = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            wowhead.MarkPresentObjects(gameObjectTemplateData);
+            return wowhead;
+        }
+
+
 
         private AreaTableEntry getDbcZoneByLuaName(string luaName)
         {
@@ -247,7 +314,6 @@ namespace Trinity.PoolDB
             var dbcName = GetLuaZone(luaName);
             var zone = dbcWMArea.Values.FirstOrDefault(row => row.AreaName.Equals(dbcName, StringComparison.InvariantCultureIgnoreCase));
             return zone;
-
         }
     }
 }

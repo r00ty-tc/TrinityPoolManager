@@ -14,6 +14,7 @@ namespace Trinity.PoolDB
         public string SqlServerPass { get; set; }
         public string SqlServerDB { get; set; }
         public string DbcFolder { get; set; }
+        public string WowheadDBFile { get; set; }
 
         public ConfigData()
         {
@@ -22,6 +23,7 @@ namespace Trinity.PoolDB
             SqlServerPass = string.Empty;
             SqlServerDB = string.Empty;
             DbcFolder = string.Empty;
+            WowheadDBFile = string.Empty;
         }
     }
 
@@ -99,6 +101,9 @@ namespace Trinity.PoolDB
 
                 if (!Directory.Exists(configData.DbcFolder))
                     return $"Invalid path {configData.DbcFolder}";
+
+                if (!File.Exists(configData.WowheadDBFile))
+                    return $"Invalid file {configData.WowheadDBFile}";
 
                 return null;
             }

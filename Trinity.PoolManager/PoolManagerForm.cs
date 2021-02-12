@@ -71,11 +71,7 @@ namespace Trinity.PoolManager
             }
 
             // Set config to form
-            txtSqlServerHost.Text = config.Data.SqlServerHost;
-            txtSqlUsername.Text = config.Data.SqlServerUser;
-            txtSqlPassword.Text = config.Data.SqlServerPass;
-            cbSqlDatabase.Text = config.Data.SqlServerDB;
-            txtTrinityDBCFolder.Text = config.Data.DbcFolder;
+            updateConfigFields();
 
             pgStatus.Minimum = 0;
             pgStatus.Anchor = AnchorStyles.Left & AnchorStyles.Bottom & AnchorStyles.Right;
@@ -263,6 +259,26 @@ namespace Trinity.PoolManager
             }
         }
 
+        private void btnBrowseWowheadFile_Click(object sender, EventArgs e)
+        {
+            using (var wowheadDialog = new OpenFileDialog())
+            {
+                wowheadDialog.Filter = "LUA files|*.lua";
+                if (File.Exists(txtWowheadLuaFile.Text))
+                    wowheadDialog.FileName = txtWowheadLuaFile.Text;
+
+                if (wowheadDialog.ShowDialog(this) == DialogResult.OK && !string.IsNullOrWhiteSpace(wowheadDialog.FileName))
+                {
+                    if (!File.Exists(wowheadDialog.FileName))
+                        MessageBox.Show($"Wowhead Data LUA file {txtWowheadLuaFile.Text} not found",
+                            "Wowhead file selection error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    else
+                        txtWowheadLuaFile.Text = wowheadDialog.FileName;
+                }
+            }
+
+        }
+
         private bool isTrinityFolderValid(string folder)
         {
             if (!folder.Last().Equals('\\'))
@@ -283,6 +299,7 @@ namespace Trinity.PoolManager
             configData.SqlServerPass = txtSqlPassword.Text;
             configData.SqlServerDB = cbSqlDatabase.Text;
             configData.DbcFolder = txtTrinityDBCFolder.Text;
+            configData.WowheadDBFile = txtWowheadLuaFile.Text;
             var result = config.SaveConfig(true);
             if (result != null)
                 MessageBox.Show(result, "Error writing configuration", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -314,6 +331,7 @@ namespace Trinity.PoolManager
             txtSqlPassword.Text = configData.SqlServerPass;
             cbSqlDatabase.Text = configData.SqlServerDB;
             txtTrinityDBCFolder.Text = configData.DbcFolder;
+            txtWowheadLuaFile.Text = configData.WowheadDBFile;
         }
 
         private void tvOverview_AfterSelect(object sender, TreeViewEventArgs e)
@@ -561,6 +579,98 @@ namespace Trinity.PoolManager
 
             foreach (var childNode in childNodes)
                 AddLegacySubNodes(childNode);
+        }
+
+        private void btnWowheadRefresh_Click(object sender, EventArgs e)
+        {
+            tvWowheadGather.Nodes.Clear();
+            var mapNode = new TrinityWowheadTreeNode("Map");
+            tvWowheadGather.Nodes.Add(mapNode);
+            updateWowheadTreeview(mapNode, data.WowheadData);
+        }
+
+        private void updateWowheadTreeview(TrinityWowheadTreeNode treeNode, WowheadDBStore wowData)
+        {
+            var mapNodes = data.WowheadData.zoneData.Values.Select(row => row.DbcMap).Distinct().OrderBy(row => row.Id).
+                Select(
+                    mapRow => new TrinityWowheadTreeNode(mapRow.ToString())
+                        {
+                            TrinityMap = mapRow
+                        }
+                    ).ToArray();
+            treeNode.Nodes.AddRange(mapNodes);
+
+            foreach (var mapNode in mapNodes)
+            {
+                var zoneNodes = data.WowheadData.zoneData.Values.Select(row => row.DbcZone)
+                    .Where(zoneRow => zoneRow.ContinentID.Equals(mapNode.TrinityMap.Id)).Distinct()
+                    .OrderBy(zoneRow => zoneRow.ID).Select(
+                        zoneRow => new TrinityWowheadTreeNode(zoneRow.ToString())
+                        {
+                            TrinityZone = zoneRow
+                        }
+                    ).ToArray();
+                mapNode.Nodes.AddRange(zoneNodes);
+
+                foreach (var zoneNode in zoneNodes)
+                {
+                    var entryNodes = data.WowheadData.zoneData[zoneNode.TrinityZone.ID].GetTemplates().
+                        OrderBy(row => row.entry).
+                        Select(
+                            entryRow => new TrinityWowheadTreeNode(entryRow.ToString())
+                            {
+                                TrinityTemplate = entryRow
+                            }
+                    ).ToArray();
+                    zoneNode.Nodes.AddRange(entryNodes);
+
+                    foreach (var entryNode in entryNodes)
+                    {
+                        var positionNodesFound = data.WowheadData.zoneData[zoneNode.TrinityZone.ID]
+                            .GetNodes(entryNode.TrinityTemplate.entry).Where(row => row.inWorldDb).Select(
+                                positionRow => new TrinityLegacyPoolTreeNode(positionRow.ToString())
+                                {
+                                    TrinityObject = positionRow.NearestObject
+                                }
+                            ).ToArray();
+                        if (positionNodesFound.Any())
+                        {
+                            var positionRootNode = new TrinityWowheadTreeNode("Found Spawns");
+                            entryNode.Nodes.Add(positionRootNode);
+                            positionRootNode.Nodes.AddRange(positionNodesFound);
+
+                            foreach (var positionNode in positionNodesFound)
+                            {
+                                if (positionNode.TrinityObject != null)
+                                {
+                                    var existingObjectNode =
+                                        new TrinityWowheadTreeNode($"{positionNode.TrinityObject.guid} [{positionNode.TrinityObject.positionX}, {positionNode.TrinityObject.positionY}, {positionNode.TrinityObject.positionZ}]")
+                                        {
+                                            TrinityObject = positionNode.TrinityObject
+                                        };
+                                    positionNode.Nodes.Add(existingObjectNode);
+                                }
+                            }
+                        }
+
+                        var positionNodesMissing = data.WowheadData.zoneData[zoneNode.TrinityZone.ID]
+                            .GetNodes(entryNode.TrinityTemplate.entry).Where(row => !row.inWorldDb).Select(
+                                positionRow => new TrinityLegacyPoolTreeNode(positionRow.ToString())
+                                {
+                                    TrinityObject = positionRow.NearestObject
+                                }
+                            ).ToArray();
+
+                        if (positionNodesMissing.Any())
+                        {
+                            var positionRootNode = new TrinityWowheadTreeNode("Missing Spawns");
+                            entryNode.Nodes.Add(positionRootNode);
+                            positionRootNode.Nodes.AddRange(positionNodesMissing);
+                        }
+
+                    }
+                }
+            }
         }
     }
 }

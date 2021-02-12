@@ -49,4 +49,27 @@ namespace Trinity.PoolManager
             TrinityTemplate = null;
         }
     }
+
+    public class TrinityWowheadTreeNode : TreeNode
+    {
+        public WowheadZoneData zoneData;
+        public WowheadNodeData nodeData;
+        public WowheadPosition posData;
+        public MapEntry TrinityMap;
+        public AreaTableEntry TrinityZone;
+        public TrinityObjectTemplate TrinityTemplate;
+        public TrinityObject TrinityObject;
+
+        public TrinityWowheadTreeNode(string text) : base(text)
+        {
+            zoneData = null;
+            nodeData = null;
+            posData = null;
+            TrinityMap = null;
+            TrinityZone = null;
+            TrinityTemplate = null;
+            TrinityObject = null;
+        }
+    }
+
 }

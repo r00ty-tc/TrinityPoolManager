@@ -97,11 +97,17 @@ namespace Trinity.PoolManager
             this.btnRefreshPools = new System.Windows.Forms.Button();
             this.tvLegacyPools = new System.Windows.Forms.TreeView();
             this.tpPoolDesigner = new System.Windows.Forms.TabPage();
+            this.tpWowhead = new System.Windows.Forms.TabPage();
+            this.pnlWowheadGather = new System.Windows.Forms.Panel();
+            this.scWowheadGather = new System.Windows.Forms.SplitContainer();
+            this.pnlWowheadTreeview = new System.Windows.Forms.Panel();
+            this.btnWowheadRefresh = new System.Windows.Forms.Button();
+            this.tvWowheadGather = new System.Windows.Forms.TreeView();
             this.tpConfig = new System.Windows.Forms.TabPage();
             this.pnlConfigTab = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSaveConfig = new System.Windows.Forms.Button();
-            this.grpDBCLocationConfig = new System.Windows.Forms.GroupBox();
+            this.grpFileLocationConfig = new System.Windows.Forms.GroupBox();
             this.btnDBCBrowse = new System.Windows.Forms.Button();
             this.txtTrinityDBCFolder = new System.Windows.Forms.TextBox();
             this.lblTrinityDBCFolder = new System.Windows.Forms.Label();
@@ -115,8 +121,9 @@ namespace Trinity.PoolManager
             this.txtSqlUsername = new System.Windows.Forms.TextBox();
             this.txtSqlServerHost = new System.Windows.Forms.TextBox();
             this.lblSqlServerHost = new System.Windows.Forms.Label();
-            this.tpWowhead = new System.Windows.Forms.TabPage();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.btnBrowseWowheadFile = new System.Windows.Forms.Button();
+            this.txtWowheadLuaFile = new System.Windows.Forms.TextBox();
+            this.lblWowheadLuaFile = new System.Windows.Forms.Label();
             this.ssStatus.SuspendLayout();
             this.pnlMaster.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -139,11 +146,16 @@ namespace Trinity.PoolManager
             this.scPoolConvert.Panel1.SuspendLayout();
             this.scPoolConvert.SuspendLayout();
             this.pnlPoolTreeview.SuspendLayout();
+            this.tpWowhead.SuspendLayout();
+            this.pnlWowheadGather.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scWowheadGather)).BeginInit();
+            this.scWowheadGather.Panel1.SuspendLayout();
+            this.scWowheadGather.SuspendLayout();
+            this.pnlWowheadTreeview.SuspendLayout();
             this.tpConfig.SuspendLayout();
             this.pnlConfigTab.SuspendLayout();
-            this.grpDBCLocationConfig.SuspendLayout();
+            this.grpFileLocationConfig.SuspendLayout();
             this.grpSqlConfig.SuspendLayout();
-            this.tpWowhead.SuspendLayout();
             this.SuspendLayout();
             // 
             // ssStatus
@@ -822,6 +834,71 @@ namespace Trinity.PoolManager
             this.tpPoolDesigner.Text = "Pool Designer";
             this.tpPoolDesigner.UseVisualStyleBackColor = true;
             // 
+            // tpWowhead
+            // 
+            this.tpWowhead.Controls.Add(this.pnlWowheadGather);
+            this.tpWowhead.Location = new System.Drawing.Point(4, 24);
+            this.tpWowhead.Name = "tpWowhead";
+            this.tpWowhead.Size = new System.Drawing.Size(792, 400);
+            this.tpWowhead.TabIndex = 4;
+            this.tpWowhead.Text = "Wowhead Gatherer";
+            this.tpWowhead.UseVisualStyleBackColor = true;
+            // 
+            // pnlWowheadGather
+            // 
+            this.pnlWowheadGather.Controls.Add(this.scWowheadGather);
+            this.pnlWowheadGather.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlWowheadGather.Location = new System.Drawing.Point(0, 0);
+            this.pnlWowheadGather.Name = "pnlWowheadGather";
+            this.pnlWowheadGather.Size = new System.Drawing.Size(792, 400);
+            this.pnlWowheadGather.TabIndex = 0;
+            // 
+            // scWowheadGather
+            // 
+            this.scWowheadGather.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scWowheadGather.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.scWowheadGather.Location = new System.Drawing.Point(0, 0);
+            this.scWowheadGather.Name = "scWowheadGather";
+            // 
+            // scWowheadGather.Panel1
+            // 
+            this.scWowheadGather.Panel1.Controls.Add(this.pnlWowheadTreeview);
+            this.scWowheadGather.Size = new System.Drawing.Size(792, 400);
+            this.scWowheadGather.SplitterDistance = 200;
+            this.scWowheadGather.TabIndex = 0;
+            // 
+            // pnlWowheadTreeview
+            // 
+            this.pnlWowheadTreeview.Controls.Add(this.btnWowheadRefresh);
+            this.pnlWowheadTreeview.Controls.Add(this.tvWowheadGather);
+            this.pnlWowheadTreeview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlWowheadTreeview.Location = new System.Drawing.Point(0, 0);
+            this.pnlWowheadTreeview.Name = "pnlWowheadTreeview";
+            this.pnlWowheadTreeview.Size = new System.Drawing.Size(200, 400);
+            this.pnlWowheadTreeview.TabIndex = 0;
+            // 
+            // btnWowheadRefresh
+            // 
+            this.btnWowheadRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnWowheadRefresh.Location = new System.Drawing.Point(4, 366);
+            this.btnWowheadRefresh.Name = "btnWowheadRefresh";
+            this.btnWowheadRefresh.Size = new System.Drawing.Size(191, 28);
+            this.btnWowheadRefresh.TabIndex = 15;
+            this.btnWowheadRefresh.Text = "Refresh";
+            this.btnWowheadRefresh.UseVisualStyleBackColor = true;
+            this.btnWowheadRefresh.Click += new System.EventHandler(this.btnWowheadRefresh_Click);
+            // 
+            // tvWowheadGather
+            // 
+            this.tvWowheadGather.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tvWowheadGather.Location = new System.Drawing.Point(5, 6);
+            this.tvWowheadGather.Name = "tvWowheadGather";
+            this.tvWowheadGather.Size = new System.Drawing.Size(191, 354);
+            this.tvWowheadGather.TabIndex = 14;
+            // 
             // tpConfig
             // 
             this.tpConfig.Controls.Add(this.pnlConfigTab);
@@ -836,7 +913,7 @@ namespace Trinity.PoolManager
             // 
             this.pnlConfigTab.Controls.Add(this.btnCancel);
             this.pnlConfigTab.Controls.Add(this.btnSaveConfig);
-            this.pnlConfigTab.Controls.Add(this.grpDBCLocationConfig);
+            this.pnlConfigTab.Controls.Add(this.grpFileLocationConfig);
             this.pnlConfigTab.Controls.Add(this.grpSqlConfig);
             this.pnlConfigTab.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlConfigTab.Location = new System.Drawing.Point(0, 0);
@@ -866,19 +943,22 @@ namespace Trinity.PoolManager
             this.btnSaveConfig.UseVisualStyleBackColor = true;
             this.btnSaveConfig.Click += new System.EventHandler(this.btnSaveConfig_Click);
             // 
-            // grpDBCLocationConfig
+            // grpFileLocationConfig
             // 
-            this.grpDBCLocationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.grpFileLocationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpDBCLocationConfig.Controls.Add(this.btnDBCBrowse);
-            this.grpDBCLocationConfig.Controls.Add(this.txtTrinityDBCFolder);
-            this.grpDBCLocationConfig.Controls.Add(this.lblTrinityDBCFolder);
-            this.grpDBCLocationConfig.Location = new System.Drawing.Point(8, 146);
-            this.grpDBCLocationConfig.Name = "grpDBCLocationConfig";
-            this.grpDBCLocationConfig.Size = new System.Drawing.Size(776, 54);
-            this.grpDBCLocationConfig.TabIndex = 5;
-            this.grpDBCLocationConfig.TabStop = false;
-            this.grpDBCLocationConfig.Text = "DBC Location";
+            this.grpFileLocationConfig.Controls.Add(this.btnBrowseWowheadFile);
+            this.grpFileLocationConfig.Controls.Add(this.txtWowheadLuaFile);
+            this.grpFileLocationConfig.Controls.Add(this.lblWowheadLuaFile);
+            this.grpFileLocationConfig.Controls.Add(this.btnDBCBrowse);
+            this.grpFileLocationConfig.Controls.Add(this.txtTrinityDBCFolder);
+            this.grpFileLocationConfig.Controls.Add(this.lblTrinityDBCFolder);
+            this.grpFileLocationConfig.Location = new System.Drawing.Point(8, 146);
+            this.grpFileLocationConfig.Name = "grpFileLocationConfig";
+            this.grpFileLocationConfig.Size = new System.Drawing.Size(776, 81);
+            this.grpFileLocationConfig.TabIndex = 5;
+            this.grpFileLocationConfig.TabStop = false;
+            this.grpFileLocationConfig.Text = "File Location";
             // 
             // btnDBCBrowse
             // 
@@ -1008,23 +1088,33 @@ namespace Trinity.PoolManager
             this.lblSqlServerHost.TabIndex = 0;
             this.lblSqlServerHost.Text = "SQL Server Host/IP";
             // 
-            // tpWowhead
+            // btnBrowseWowheadFile
             // 
-            this.tpWowhead.Controls.Add(this.panel1);
-            this.tpWowhead.Location = new System.Drawing.Point(4, 24);
-            this.tpWowhead.Name = "tpWowhead";
-            this.tpWowhead.Size = new System.Drawing.Size(792, 400);
-            this.tpWowhead.TabIndex = 4;
-            this.tpWowhead.Text = "Wowhead Gatherer";
-            this.tpWowhead.UseVisualStyleBackColor = true;
+            this.btnBrowseWowheadFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowseWowheadFile.Location = new System.Drawing.Point(652, 45);
+            this.btnBrowseWowheadFile.Name = "btnBrowseWowheadFile";
+            this.btnBrowseWowheadFile.Size = new System.Drawing.Size(118, 23);
+            this.btnBrowseWowheadFile.TabIndex = 6;
+            this.btnBrowseWowheadFile.Text = "Browse";
+            this.btnBrowseWowheadFile.UseVisualStyleBackColor = true;
+            this.btnBrowseWowheadFile.Click += new System.EventHandler(this.btnBrowseWowheadFile_Click);
             // 
-            // panel1
+            // txtWowheadLuaFile
             // 
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(792, 400);
-            this.panel1.TabIndex = 0;
+            this.txtWowheadLuaFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtWowheadLuaFile.Location = new System.Drawing.Point(130, 45);
+            this.txtWowheadLuaFile.Name = "txtWowheadLuaFile";
+            this.txtWowheadLuaFile.Size = new System.Drawing.Size(516, 23);
+            this.txtWowheadLuaFile.TabIndex = 5;
+            // 
+            // lblWowheadLuaFile
+            // 
+            this.lblWowheadLuaFile.Location = new System.Drawing.Point(6, 48);
+            this.lblWowheadLuaFile.Name = "lblWowheadLuaFile";
+            this.lblWowheadLuaFile.Size = new System.Drawing.Size(118, 23);
+            this.lblWowheadLuaFile.TabIndex = 4;
+            this.lblWowheadLuaFile.Text = "Wowhead LUA File";
             // 
             // PoolManagerForm
             // 
@@ -1060,13 +1150,18 @@ namespace Trinity.PoolManager
             ((System.ComponentModel.ISupportInitialize)(this.scPoolConvert)).EndInit();
             this.scPoolConvert.ResumeLayout(false);
             this.pnlPoolTreeview.ResumeLayout(false);
+            this.tpWowhead.ResumeLayout(false);
+            this.pnlWowheadGather.ResumeLayout(false);
+            this.scWowheadGather.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scWowheadGather)).EndInit();
+            this.scWowheadGather.ResumeLayout(false);
+            this.pnlWowheadTreeview.ResumeLayout(false);
             this.tpConfig.ResumeLayout(false);
             this.pnlConfigTab.ResumeLayout(false);
-            this.grpDBCLocationConfig.ResumeLayout(false);
-            this.grpDBCLocationConfig.PerformLayout();
+            this.grpFileLocationConfig.ResumeLayout(false);
+            this.grpFileLocationConfig.PerformLayout();
             this.grpSqlConfig.ResumeLayout(false);
             this.grpSqlConfig.PerformLayout();
-            this.tpWowhead.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1145,7 +1240,7 @@ namespace Trinity.PoolManager
         private System.Windows.Forms.Panel pnlConfigTab;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSaveConfig;
-        private System.Windows.Forms.GroupBox grpDBCLocationConfig;
+        private System.Windows.Forms.GroupBox grpFileLocationConfig;
         private System.Windows.Forms.Button btnDBCBrowse;
         private System.Windows.Forms.TextBox txtTrinityDBCFolder;
         private System.Windows.Forms.Label lblTrinityDBCFolder;
@@ -1160,7 +1255,14 @@ namespace Trinity.PoolManager
         private System.Windows.Forms.TextBox txtSqlServerHost;
         private System.Windows.Forms.Label lblSqlServerHost;
         private System.Windows.Forms.TabPage tpWowhead;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlWowheadGather;
+        private System.Windows.Forms.SplitContainer scWowheadGather;
+        private System.Windows.Forms.Panel pnlWowheadTreeview;
+        private System.Windows.Forms.Button btnWowheadRefresh;
+        private System.Windows.Forms.TreeView tvWowheadGather;
+        private System.Windows.Forms.Button btnBrowseWowheadFile;
+        private System.Windows.Forms.TextBox txtWowheadLuaFile;
+        private System.Windows.Forms.Label lblWowheadLuaFile;
     }
 }
 
