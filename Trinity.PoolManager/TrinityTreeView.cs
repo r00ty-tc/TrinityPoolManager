@@ -57,7 +57,7 @@ namespace Trinity.PoolManager
         public WowheadPosition posData;
         public MapEntry TrinityMap;
         public AreaTableEntry TrinityZone;
-        public TrinityObjectTemplate TrinityTemplate;
+        public IEnumerable<TrinityObjectTemplate> TrinityTemplates;
         public TrinityObject TrinityObject;
 
         public TrinityWowheadTreeNode(string text) : base(text)
@@ -67,7 +67,7 @@ namespace Trinity.PoolManager
             posData = null;
             TrinityMap = null;
             TrinityZone = null;
-            TrinityTemplate = null;
+            TrinityTemplates = null;
             TrinityObject = null;
         }
     }

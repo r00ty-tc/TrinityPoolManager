@@ -14,17 +14,22 @@ namespace Trinity.PoolDB
             zoneData = new Dictionary<int, WowheadZoneData>();
         }
 
-        public void MarkPresentObjects(SortedDictionary<uint, TrinityObjectTemplate> objects)
+        public void MarkPresentObjects(SortedDictionary<string, List<TrinityObjectTemplate>> goNameData)
         {
             foreach (var zone in zoneData.Values)
             {
                 foreach (var entry in zone.GetEntries())
                 {
-                    if (objects.TryGetValue(entry, out var entryObjects))
+                    var entryObject = zone.GetTemplate(entry);
+                    // Get all templates by name
+                    if (goNameData.TryGetValue(entryObject.name, out var objectList))
                     {
+                        var allObjects = objectList.SelectMany(row => row.objects);
                         foreach (var node in zone.GetNodes(entry))
                         {
-                            var nearestObj = entryObjects.objects.OrderBy(row => node.getDist(row.positionX, row.positionY)).FirstOrDefault(row => node.getDist(row.positionX, row.positionY) < PoolDB.MAX_SEARCH_DISTANCE);
+                            var nearestObj = allObjects
+                                .OrderBy(row => node.getDist(row.positionX, row.positionY)).FirstOrDefault(row =>
+                                    node.getDist(row.positionX, row.positionY) < PoolDB.MAX_SEARCH_DISTANCE);
                             if (nearestObj != null)
                             {
                                 node.inWorldDb = true;
@@ -119,6 +124,10 @@ namespace Trinity.PoolDB
         public TrinityObjectTemplate GetTemplate(uint entryid) => entryData[entryid].TemplateObject;
         public IEnumerable<TrinityObjectTemplate> GetTemplates() => entryData.Values.Select(row => row.TemplateObject);
         public IEnumerable<WowheadPosition> GetNodes(uint entryid) => entryData[entryid].Positions;
+
+        public IEnumerable<WowheadPosition> GetNodes(IEnumerable<uint> entries) => entryData
+            .Where(row => entries.Contains(row.Key)).
+            SelectMany(line => line.Value.Positions);
     }
 
     public class WowheadNodeData

@@ -614,20 +614,31 @@ namespace Trinity.PoolManager
 
                 foreach (var zoneNode in zoneNodes)
                 {
-                    var entryNodes = data.WowheadData.zoneData[zoneNode.TrinityZone.ID].GetTemplates().
+                    var entryNames = data.WowheadData.zoneData[zoneNode.TrinityZone.ID].GetTemplates()
+                        .Select(row => row.name).Distinct().OrderBy(name => name);
+
+                    /*var entryNodes = data.WowheadData.zoneData[zoneNode.TrinityZone.ID].GetTemplates().
                         OrderBy(row => row.entry).
                         Select(
                             entryRow => new TrinityWowheadTreeNode(entryRow.ToString())
                             {
                                 TrinityTemplate = entryRow
                             }
+                    ).ToArray();*/
+
+                    var entryNodes = entryNames.Select(row => data.GetGameObjectsByName(row)).Select(node =>
+                        new TrinityWowheadTreeNode($"{node.FirstOrDefault().name} ({string.Join(',', node.Select(row => row.entry.ToString()))})")
+                        {
+                            TrinityTemplates = node
+                        }
                     ).ToArray();
-                    zoneNode.Nodes.AddRange(entryNodes);
+
+                zoneNode.Nodes.AddRange(entryNodes);
 
                     foreach (var entryNode in entryNodes)
                     {
                         var positionNodesFound = data.WowheadData.zoneData[zoneNode.TrinityZone.ID]
-                            .GetNodes(entryNode.TrinityTemplate.entry).Where(row => row.inWorldDb).Select(
+                            .GetNodes(entryNode.TrinityTemplates.Select(line => line.entry)).Where(row => row.inWorldDb).Select(
                                 positionRow => new TrinityLegacyPoolTreeNode(positionRow.ToString())
                                 {
                                     TrinityObject = positionRow.NearestObject
@@ -654,7 +665,7 @@ namespace Trinity.PoolManager
                         }
 
                         var positionNodesMissing = data.WowheadData.zoneData[zoneNode.TrinityZone.ID]
-                            .GetNodes(entryNode.TrinityTemplate.entry).Where(row => !row.inWorldDb).Select(
+                            .GetNodes(entryNode.TrinityTemplates.Select(line => line.entry)).Where(row => !row.inWorldDb).Select(
                                 positionRow => new TrinityLegacyPoolTreeNode(positionRow.ToString())
                                 {
                                     TrinityObject = positionRow.NearestObject

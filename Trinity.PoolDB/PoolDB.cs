@@ -110,6 +110,7 @@ namespace Trinity.PoolDB
         private SortedDictionary<uint, TrinityObjectTemplate> gameObjectTemplateData;
         private SortedDictionary<uint, LegacyPoolEntry> legacyPoolData;
         private SortedDictionary<uint, MapPoolItem> mapPoolData;
+        private SortedDictionary<string, List<TrinityObjectTemplate>> goTemplateByName;
         private Dictionary<uint, LegacyPoolEntry> unstructLegacyPoolData;
         private PoolLoadStatus currentStatus;
         private ReaderWriterLockSlim statusLock;
@@ -127,6 +128,7 @@ namespace Trinity.PoolDB
         public SortedDictionary<uint, TrinityObjectTemplate> CreatureTemplateData => creatureTemplateData;
         public SortedDictionary<uint, TrinityObject> GameObjectData => gameObjectData;
         public SortedDictionary<uint, TrinityObjectTemplate> GameObjectTemplateData => gameObjectTemplateData;
+        public SortedDictionary<string, List<TrinityObjectTemplate>> GameObjectTemplatesByName => goTemplateByName;
         public SortedDictionary<uint, LegacyPoolEntry> LegacyPoolData => legacyPoolData;
         public WowheadDBStore WowheadData => wowheadStore;
 
@@ -139,6 +141,7 @@ namespace Trinity.PoolDB
             unstructLegacyPoolData = null;
             mapPoolData = null;
             wowheadStore = null;
+            goTemplateByName = null;
             currentStatus = new PoolLoadStatus();
             statusLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
@@ -295,11 +298,17 @@ namespace Trinity.PoolDB
                     }
                 }
             }
-            wowhead.MarkPresentObjects(gameObjectTemplateData);
+            wowhead.MarkPresentObjects(goTemplateByName);
             return wowhead;
         }
 
+        public IEnumerable<TrinityObjectTemplate> GetGameObjectsByName(string goName)
+        {
+            if (!goTemplateByName.TryGetValue(goName, out List<TrinityObjectTemplate> goTemplate))
+                return null;
 
+            return goTemplate;
+        }
 
         private AreaTableEntry getDbcZoneByLuaName(string luaName)
         {

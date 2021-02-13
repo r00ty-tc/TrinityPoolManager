@@ -195,6 +195,7 @@ namespace Trinity.PoolDB
                 + "from gameobject_template";
 
             gameObjectData = new SortedDictionary<uint, TrinityObject>();
+            goTemplateByName = new SortedDictionary<string, List<TrinityObjectTemplate>>();
 
             UpdateStatus("Loading gameobject templates");
             using (var templateCmd = new MySqlCommand(templateQuery, sqlConnection))
@@ -243,6 +244,15 @@ namespace Trinity.PoolDB
                             scriptName = gameObjectTemplateRecords.GetString(33)
                         };
                         gameObjectTemplateData.Add(template.entry, template);
+
+                        // Add template by name (for wowhead lookup)
+                        if (!goTemplateByName.TryGetValue(template.name, out List<TrinityObjectTemplate> goTemplates))
+                        {
+                            goTemplates = new List<TrinityObjectTemplate>();
+                            goTemplateByName.Add(template.name, goTemplates);
+                        }
+                        goTemplates.Add(template);
+
                         UpdateStatus(null, ++currentStatus.currentItem, null);
                     }
                 }
